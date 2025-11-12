@@ -2,7 +2,6 @@ library(dplyr)
 library(lubridate)
 library(sf)
 library(tidyr)
-
 # Chargement des données
 ref <- read.csv("../data/raw-data/temp_ref.csv", sep = ",") %>%
   group_by(X_date) %>%

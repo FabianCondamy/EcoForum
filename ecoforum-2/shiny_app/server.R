@@ -9,6 +9,8 @@ library(lubridate)
 
 source("data_prep.R")
 
+bbox_global <- st_bbox(temp)
+tiles_global <- get_tiles(bbox_global, crop = TRUE, provider = "OpenStreetMap")
 server <- function(input, output, session) {
   
   # Remplissage dynamique des choix
@@ -63,12 +65,8 @@ server <- function(input, output, session) {
   output$mapPlot <- renderPlot({
     df <- filtered_data()
     req(nrow(df) > 0)
-    
-    bbox <- st_bbox(df)
-    tiles <- get_tiles(bbox, crop = TRUE, provider = "OpenStreetMap")
-    
     ggplot() +
-      geom_spatraster_rgb(data = tiles) +
+      geom_spatraster_rgb(data = tiles_global) +
       geom_sf(data = df, aes(color = .data[[input$variable]]), size = 3) +
       scale_color_viridis_c(option = "plasma") +
       labs(title = "Localisation des Capteurs", color = input$variable) +
