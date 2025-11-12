@@ -13,7 +13,7 @@ L'application utilise désormais le dossier `R/` pour le chargement automatique 
 - **server.R** : Logique serveur principale.
 - **R/** : Dossier contenant le code qui gère le traitement des données et les sorties (chargé automatiquement par Shiny).
   - **data_prep.R** : Chargement et nettoyage des données.
-  - **mod_timeseries.R** : Module de visualisation des séries temporelles.
+  - **mod_serietemp.R** : Module de visualisation des séries temporelles.
   - **mod_map.R** : Module de cartographie interactive.
   - **mod_stats.R** : Module des boxplots comparatifs.
   - **mod_summary.R** : Module du résumé statistique.
