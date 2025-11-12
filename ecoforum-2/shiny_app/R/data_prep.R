@@ -38,3 +38,6 @@ temp <- temp %>%
          temp.ecart.prc = (temp.corr - temp.ref) / temp.ref)
 
 temp$month_name <- factor(month.name[temp$MM], levels = month.name)
+
+bbox_global <- st_bbox(temp)
+tiles_global <- get_tiles(bbox_global, crop = TRUE, provider = "OpenStreetMap")

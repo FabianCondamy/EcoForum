@@ -25,10 +25,10 @@ ui <- fluidPage(
     
     mainPanel(
       tabsetPanel(
-        tabPanel("Température vs DOY", plotOutput("tempPlot")),
-        tabPanel("Boxplots", plotOutput("boxplotTemp")),
-        tabPanel("Carte des zones", plotOutput("mapPlot")),
-        tabPanel("Résumé statistique", tableOutput("summaryTable"))
+        tabPanel("Température vs DOY", timeseriesUI("ts1")),
+        tabPanel("Boxplots", statsUI("stat1")),
+        tabPanel("Carte des zones", mapUI("map1")),
+        tabPanel("Résumé statistique", summaryUI("sum1"))
       )
     )
   )
