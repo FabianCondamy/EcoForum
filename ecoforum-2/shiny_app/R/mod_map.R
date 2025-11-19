@@ -16,7 +16,7 @@ mapServer <- function(id, data, variable, tiles) {
       req(nrow(df) > 0)
       
       ggplot() +
-        geom_spatraster_rgb(data = tiles) +
+        geom_spatraster_rgb(data = tiles()) + 
         geom_sf(data = df, aes(color = .data[[var_name]]), size = 3) +
         scale_color_viridis_c(option = "plasma") +
         labs(title = "Localisation des Capteurs", color = var_name) +
