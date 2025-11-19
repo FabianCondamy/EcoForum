@@ -19,6 +19,7 @@ statsServer <- function(id, data, variable) {
         y = .data[[var_name]],
         fill = as.factor(YYYY)
       )) +
+        scale_fill_manual(values = okabe_ito) +
         geom_boxplot(alpha = 0.7, outlier.size = 0.8) +
         
         labs(

@@ -19,6 +19,7 @@ timeseriesServer <- function(id, data, variable) {
                      color = as.factor(YYYY),
                      group = interaction(sensor, YYYY))) +
         geom_line(alpha = 0.6, linewidth = 0.6) +
+        scale_color_manual(values = okabe_ito) +
         geom_hline(yintercept = 0, linetype = "dashed", color = "grey50") +
         labs(
           title = paste(var_name, "en continu (horodaté)"),
