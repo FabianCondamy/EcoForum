@@ -1,7 +1,12 @@
 timeseriesUI <- function(id) {
   ns <- NS(id)
   tagList(
-    plotOutput(ns("tempPlot"), height = "500px")  # on fixe la hauteur pour éviter chevauchement
+    shinycssloaders::withSpinner(
+      plotOutput(ns("tempPlot"), height = "500px"),
+      type = 4,              # type de spinner
+      color = "#56B4E9",     # couleur Okabe-Ito (bleu)
+      size = 1.2             # taille du spinner
+    )
   )
 }
 

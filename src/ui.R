@@ -1,4 +1,5 @@
 library(shiny)
+library(shinycssloaders)
 
 ui <- fluidPage(
   # CSS pour les blocs <details> 

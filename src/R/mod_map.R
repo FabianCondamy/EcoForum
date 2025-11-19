@@ -1,7 +1,12 @@
 mapUI <- function(id) {
   ns <- NS(id)
   tagList(
-    plotOutput(ns("mapPlot"))
+    shinycssloaders::withSpinner(
+      plotOutput(ns("mapPlot")),
+      type = 4,              # type de spinner
+      color = "#56B4E9",     # couleur Okabe-Ito (bleu)
+      size = 1.2             # taille du spinner
+    )
   )
 }
 

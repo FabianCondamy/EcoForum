@@ -4,6 +4,7 @@ summaryUI <- function(id) {
     tableOutput(ns("summaryTable"))
   )
 }
+# Mettre bulle chargement (à voir si vraiment besoin)
 
 summaryServer <- function(id, data, variable) {
   moduleServer(id, function(input, output, session) {

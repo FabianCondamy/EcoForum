@@ -1,7 +1,12 @@
 statsUI <- function(id) {
   ns <- NS(id)
   tagList(
-    plotOutput(ns("boxplotPlot"), height = "500px")   # Hauteur fixée pour éviter chevauchements
+    shinycssloaders::withSpinner(
+      plotOutput(ns("boxplotPlot"), height = "500px"),
+      type = 4,              # type de spinner
+      color = "#56B4E9",     # couleur Okabe-Ito (bleu)
+      size = 1.2             # taille du spinner
+    )
   )
 }
 
