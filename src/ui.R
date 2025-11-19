@@ -1,7 +1,7 @@
 library(shiny)
 
 ui <- fluidPage(
-  # CSS pour les blocs <details>
+  # CSS pour les blocs <details> 
   tags$style(HTML("
     details {
       border: 1px solid #aaa;
@@ -9,13 +9,27 @@ ui <- fluidPage(
       border-radius: 8px;
       margin-top: 15px;
       background-color: #f7f7f7;
-      display: block;
-      width: 100%;
+      position: relative;
     }
     summary {
       font-weight: bold;
       font-size: 15px;
       cursor: pointer;
+      list-style: none; /* enlève le triangle par défaut */
+      position: relative;
+      padding-right: 20px; /* espace pour le triangle */
+    }
+    summary::after {
+      content: '\\25B6'; /* triangle pointant vers la droite */
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%) rotate(90deg); /* triangle vers le bas initial */
+      transition: transform 0.2s ease;
+      font-size: 12px;
+    }
+    details[open] summary::after {
+      transform: translateY(-50%) rotate(-90deg); /* triangle vers le haut quand ouvert */
     }
   ")),
   
