@@ -39,6 +39,10 @@ server <- function(input, output, session) {
     return(nums)
   }
   
+  # button "Sélectionner tout"
+  observeEvent(input$select_all_sensors, {
+    updateTextInput(session, "sensor_input", value = paste(all_sensors, collapse = ","))
+  })
   
   doy_range <- reactive({
     

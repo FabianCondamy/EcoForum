@@ -113,24 +113,19 @@ ui <- fluidPage(
       ),
 #      sliderInput("hour_range", "Heure(s) de la journée :", 
 #                  min = 0, max = 23, value = c(0, 23), step = 1),
-#      textInput(
-#        inputId = "sensor_input",
-#        label = "Capteurs (séparer par des virgules) :",
-#        placeholder = "Ex: 2,3,5"
-#      ),
       tags$div(
         style = "border: 1px solid #ddd; padding: 10px; border-radius: 8px; margin-top: 10px;",
         textInput(
           inputId = "sensor_input",
           label = "Capteurs (séparer par des virgules) :",
-          placeholder = "Ex: 2,3,5",
+          placeholder = "ex: 2,3,5",
           width = "100%"
           ),
         actionButton(
           inputId = "select_all_sensors",
           label = "Sélectionner tout",
           width = "100%",
-          style = "margin-top: 5px;"  # небольшое расстояние от поля
+          style = "margin-top: 5px;"
           )
         ),
 #      checkboxGroupInput("sensor_select", "Capteurs :", choices = NULL),
