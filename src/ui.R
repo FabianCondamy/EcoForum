@@ -89,31 +89,23 @@ ui <- fluidPage(
       checkboxGroupInput("year_select", "Année(s) :", choices = NULL),
       textInput(
         inputId = "doy_input",
-        label = "Période DOY :",
+        label = "Période de l'année (DOY):",
         placeholder = "ex: 1-365"
       ),
 #      sliderInput("doy_range", "Période de l'année (DOY) :", 
 #                  min = 1, max = 365, value = c(1, 365), step = 1),
 
-#      fluidRow(
-#        column(6,numericInput(
-#                 "hour_start",
-#                 "Heure de début :",
-#                 value = 0,min = 0,max = 23,step = 1)),
-#        column(6,numericInput(
-#                 "hour_end",
-#                 "Heure de fin :",
-#                 value = 23,min = 0,max = 23,step = 1))),
-tags$div(
-  style = "border: 1px solid #ddd; padding: 8px; border-radius: 8px; display: flex; align-items: center; gap: 10px; width: 100%;",
-  tags$span("Heure :", style = "font-weight: 600; width: 70px;"),
-  tags$span("de", style = "font-weight: 600; width: 20px; text-align: center;"),
-  textInput("hour_start", NULL, value = "0", width = "35%"),
-  tags$span("à", style = "font-weight: 600; width: 20px; text-align: center;"),
-  textInput("hour_end", NULL, value = "23", width = "35%")
-),
-#      sliderInput("hour_range", "Heure(s) de la journée :", 
-#                  min = 0, max = 23, value = c(0, 23), step = 1),
+#tags$div(
+#  style = "border: 1px solid #ddd; padding: 8px; border-radius: 8px; display: flex; align-items: center; gap: 10px; width: 100%;",
+#  tags$span("Heure :", style = "font-weight: 600; width: 70px;"),
+#  tags$span("de", style = "font-weight: 600; width: 20px; text-align: center;"),
+#  textInput("hour_start", NULL, value = "0", width = "35%"),
+#  tags$span("à", style = "font-weight: 600; width: 20px; text-align: center;"),
+#  textInput("hour_end", NULL, value = "23", width = "35%")
+#),
+
+      sliderInput("hour_range", "Heure(s) de la journée :", 
+                  min = 0, max = 23, value = c(0, 23), step = 1),
       tags$div(
         style = "border: 1px solid #ddd; padding: 10px; border-radius: 8px; margin-top: 10px;",
         textInput(

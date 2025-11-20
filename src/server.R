@@ -75,11 +75,6 @@ server <- function(input, output, session) {
     temp
   })
   
-  hour_range <- reactive({
-    start <- as.numeric(input$hour_start)
-    end <- as.numeric(input$hour_end)
-    c(start, end)
-  })
   
   # Remplissage dynamique des choix
   observe({
@@ -95,12 +90,12 @@ server <- function(input, output, session) {
                     value = paste(all_sensors, collapse = ","))
     
     # DOY
-    updateTextInput(session, "doy_input",
+    updateTextInput(session, "doy_input", 
                     value = "1-365")
     
-    # hours
-    updateNumericInput(session, "hour_start", value = 0)
-    updateNumericInput(session, "hour_end", value = 23)
+    # Heures (slider)
+    updateSliderInput(session, "hour_range", 
+                      value = c(0, 23))
     
 #    updateCheckboxGroupInput(session, "sensor_select",
 #                             choices = sort(unique(temp$sensor)),
@@ -108,7 +103,7 @@ server <- function(input, output, session) {
   })
   
   hour_range <- reactive({
-    c(input$hour_start, input$hour_end)
+    input$hour_range
   })
   
   # Primary filtering at start
@@ -131,8 +126,7 @@ server <- function(input, output, session) {
 
     updateCheckboxGroupInput(session, "year_select", selected = character(0))
     updateTextInput(session, "doy_input", value = "")
-    updateNumericInput(session, "hour_start", value = 0)
-    updateNumericInput(session, "hour_end", value = 23)
+    updateSliderInput(session, "hour_range", value = c(0, 23))
     updateTextInput(session, "sensor_input", value = "")
   })
   
