@@ -82,11 +82,58 @@ ui <- fluidPage(
       selectInput("variable", "Choisir une variable :", 
                   choices = c("temp.corr", "temp.ecart.prc", "temp.ecart.raw")),
       checkboxGroupInput("year_select", "Année(s) :", choices = NULL),
-      sliderInput("doy_range", "Période de l'année (DOY) :", 
-                  min = 1, max = 365, value = c(1, 365), step = 1),
-      sliderInput("hour_range", "Heure(s) de la journée :", 
-                  min = 0, max = 23, value = c(0, 23), step = 1),
-      checkboxGroupInput("sensor_select", "Capteurs :", choices = NULL),
+      textInput(
+        inputId = "doy_input",
+        label = "Période DOY :",
+        placeholder = "ex: 1-365"
+      ),
+#      sliderInput("doy_range", "Période de l'année (DOY) :", 
+#                  min = 1, max = 365, value = c(1, 365), step = 1),
+      fluidRow(
+        column(6,
+               numericInput(
+                 "hour_start",
+                 "Heure de début :",
+                 value = 0,
+                 min = 0,
+                 max = 23,
+                 step = 1
+               )
+        ),
+        column(6,
+               numericInput(
+                 "hour_end",
+                 "Heure de fin :",
+                 value = 23,
+                 min = 0,
+                 max = 23,
+                 step = 1
+               )
+        )
+      ),
+#      sliderInput("hour_range", "Heure(s) de la journée :", 
+#                  min = 0, max = 23, value = c(0, 23), step = 1),
+#      textInput(
+#        inputId = "sensor_input",
+#        label = "Capteurs (séparer par des virgules) :",
+#        placeholder = "Ex: 2,3,5"
+#      ),
+      tags$div(
+        style = "border: 1px solid #ddd; padding: 10px; border-radius: 8px; margin-top: 10px;",
+        textInput(
+          inputId = "sensor_input",
+          label = "Capteurs (séparer par des virgules) :",
+          placeholder = "Ex: 2,3,5",
+          width = "100%"
+          ),
+        actionButton(
+          inputId = "select_all_sensors",
+          label = "Sélectionner tout",
+          width = "100%",
+          style = "margin-top: 5px;"  # небольшое расстояние от поля
+          )
+        ),
+#      checkboxGroupInput("sensor_select", "Capteurs :", choices = NULL),
       actionButton("update", "Mettre à jour")
     ),
     
@@ -138,4 +185,3 @@ ui <- fluidPage(
     )
   )
 )
-
