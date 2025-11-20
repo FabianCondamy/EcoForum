@@ -104,13 +104,14 @@ ui <- fluidPage(
 #                 "hour_end",
 #                 "Heure de fin :",
 #                 value = 23,min = 0,max = 23,step = 1))),
-      tags$div(
-        style = "display: flex; align-items: center; gap: 10px;",
-        tags$span("Heure : de"),
-        numericInput("hour_start", NULL, value = 0, min = 0, max = 23, width = "80px"),
-        tags$span("à"),
-        numericInput("hour_end", NULL, value = 23, min = 0, max = 23, width = "80px")
-      ),
+tags$div(
+  style = "border: 1px solid #ddd; padding: 8px; border-radius: 8px; display: flex; align-items: center; gap: 10px; width: 100%;",
+  tags$span("Heure :", style = "font-weight: 600; width: 70px;"),
+  tags$span("de", style = "font-weight: 600; width: 20px; text-align: center;"),
+  textInput("hour_start", NULL, value = "0", width = "35%"),
+  tags$span("à", style = "font-weight: 600; width: 20px; text-align: center;"),
+  textInput("hour_end", NULL, value = "23", width = "35%")
+),
 #      sliderInput("hour_range", "Heure(s) de la journée :", 
 #                  min = 0, max = 23, value = c(0, 23), step = 1),
       tags$div(

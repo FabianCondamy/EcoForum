@@ -75,6 +75,12 @@ server <- function(input, output, session) {
     temp
   })
   
+  hour_range <- reactive({
+    start <- as.numeric(input$hour_start)
+    end <- as.numeric(input$hour_end)
+    c(start, end)
+  })
+  
   # Remplissage dynamique des choix
   observe({
     
