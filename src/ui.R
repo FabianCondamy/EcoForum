@@ -79,8 +79,13 @@ ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
       width = 3,
-      selectInput("variable", "Choisir une variable :", 
-                  choices = c("temp.corr", "temp.ecart.prc", "temp.ecart.raw")),
+      selectInput("variable", "Choisir une variable :",
+                  choices = c(
+                    "Température corrigée (temp.corr)" = "temp.corr",
+                    "Écart (%) (temp.ecart.prc)" = "temp.ecart.prc",
+                    "Écart brut (temp.ecart.raw)" = "temp.ecart.raw"
+                  )
+                  ),
       checkboxGroupInput("year_select", "Année(s) :", choices = NULL),
       textInput(
         inputId = "doy_input",
@@ -89,27 +94,22 @@ ui <- fluidPage(
       ),
 #      sliderInput("doy_range", "Période de l'année (DOY) :", 
 #                  min = 1, max = 365, value = c(1, 365), step = 1),
-      fluidRow(
-        column(6,
-               numericInput(
-                 "hour_start",
-                 "Heure de début :",
-                 value = 0,
-                 min = 0,
-                 max = 23,
-                 step = 1
-               )
-        ),
-        column(6,
-               numericInput(
-                 "hour_end",
-                 "Heure de fin :",
-                 value = 23,
-                 min = 0,
-                 max = 23,
-                 step = 1
-               )
-        )
+
+#      fluidRow(
+#        column(6,numericInput(
+#                 "hour_start",
+#                 "Heure de début :",
+#                 value = 0,min = 0,max = 23,step = 1)),
+#        column(6,numericInput(
+#                 "hour_end",
+#                 "Heure de fin :",
+#                 value = 23,min = 0,max = 23,step = 1))),
+      tags$div(
+        style = "display: flex; align-items: center; gap: 10px;",
+        tags$span("Heure : de"),
+        numericInput("hour_start", NULL, value = 0, min = 0, max = 23, width = "80px"),
+        tags$span("à"),
+        numericInput("hour_end", NULL, value = 23, min = 0, max = 23, width = "80px")
       ),
 #      sliderInput("hour_range", "Heure(s) de la journée :", 
 #                  min = 0, max = 23, value = c(0, 23), step = 1),
@@ -125,11 +125,15 @@ ui <- fluidPage(
           inputId = "select_all_sensors",
           label = "Sélectionner tout",
           width = "100%",
-          style = "margin-top: 5px;"
+          style = "margin-top: 1px;"
           )
         ),
 #      checkboxGroupInput("sensor_select", "Capteurs :", choices = NULL),
-      actionButton("update", "Mettre à jour")
+#      actionButton("update", "Mettre à jour", style = "margin-top: 10px;")
+      fluidRow(
+        column(6,actionButton("clear_all", "Tout réinitialiser", width = "100%")),
+        column(6,actionButton("update", "Mettre à jour", width = "100%")),
+        style = "margin-top: 10px;")
     ),
     
     mainPanel(

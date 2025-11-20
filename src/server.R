@@ -121,6 +121,15 @@ server <- function(input, output, session) {
     filtered_data(filtered)
   })
   
+  observeEvent(input$clear_all, {
+
+    updateCheckboxGroupInput(session, "year_select", selected = character(0))
+    updateTextInput(session, "doy_input", value = "")
+    updateNumericInput(session, "hour_start", value = 0)
+    updateNumericInput(session, "hour_end", value = 23)
+    updateTextInput(session, "sensor_input", value = "")
+  })
+  
   observeEvent (input$update, {
     selected <- process_sensor_input(input$sensor_input, all_sensors)
     req(length(selected) > 0, input$year_select)
