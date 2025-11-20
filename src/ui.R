@@ -172,6 +172,51 @@ ui <- fluidPage(
             tags$summary("Explications (cliquer pour dérouler)"),
             tags$p("Ce tableau résume les statistiques principales : moyenne, écart-type, min, max et nombre de mesures par capteur.")
           )
+        ),
+        
+        tabPanel(
+          "Résumé statistique_1",
+          fluidRow(
+            column(4,wellPanel(
+                style = "padding: 15px;",
+                h4("Valeur minimale (globale)", align = "center"),
+                tags$hr(),
+                h3(textOutput("global_min"), align = "center")
+              )),
+            column(4,wellPanel(
+                style = "padding: 15px;",
+                h4("Valeur moyenne (globale)", align = "center"),
+                tags$hr(),
+                h3(textOutput("global_mean"), align = "center")
+              )),
+            column(4,wellPanel(
+                style = "padding: 15px;",
+                h4("Valeur maximale (globale)", align = "center"),
+                tags$hr(),
+                h3(textOutput("global_max"), align = "center"))
+              )),
+          
+          tags$br(),
+          
+          fluidRow(
+            column(3,wellPanel(h4("Choisir un capteur"),numericInput("sensor_id", "Numéro du capteur :", value = 1, min = 1))),
+            column(3,wellPanel(h4("Min (capteur choisi)"),textOutput("sensor_min"))),
+            column(3,wellPanel(h4("Moyenne (capteur choisi)"),textOutput("sensor_mean"))),
+            column(3,wellPanel(h4("Max (capteur choisi)"),textOutput("sensor_max")))
+          ),
+          tags$br(),
+          
+          fluidRow(
+            column(6,wellPanel(h4("Température vs DOY"),timeseriesUI("ts1_single"))),
+            column(6,wellPanel(h4("Boxplots"), statsUI("stat1_single")))
+          ),
+          
+          tags$br(),
+          
+          tags$details(
+            tags$summary("Explications (cliquer pour dérouler)"),
+            tags$p("Cette page permet d'explorer les statistiques globales et celles d'un seul capteur sélectionné…")
+          )
         )
       )
     )
