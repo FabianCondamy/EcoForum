@@ -78,11 +78,23 @@ server <- function(input, output, session) {
   # Remplissage dynamique des choix
   observe({
     
-    df <- data_available()
+    #   df <- data_available()
     
     updateCheckboxGroupInput(session, "year_select",
                              choices = sort(unique(temp$YYYY)),
                              selected = unique(temp$YYYY))
+    
+    # sensors
+    updateTextInput(session, "sensor_input",
+                    value = paste(all_sensors, collapse = ","))
+    
+    # DOY
+    updateTextInput(session, "doy_input",
+                    value = "1-365")
+    
+    # hours
+    updateNumericInput(session, "hour_start", value = 0)
+    updateNumericInput(session, "hour_end", value = 23)
     
 #    updateCheckboxGroupInput(session, "sensor_select",
 #                             choices = sort(unique(temp$sensor)),
@@ -93,12 +105,27 @@ server <- function(input, output, session) {
     c(input$hour_start, input$hour_end)
   })
   
-  filtered_data <- eventReactive(input$update, {
-    
+  # Primary filtering at start
+  filtered_data <- reactiveVal(NULL)
+  
+  observe({
+    # Perform filtering immediately at start
+    selected <- process_sensor_input(paste(all_sensors, collapse = ","), all_sensors)
+    filtered <- temp %>%
+      filter(
+        sensor %in% selected,
+        YYYY %in% unique(temp$YYYY),
+        doy >= 1, doy <= 365,
+        HH >= 0, HH <= 23
+      )
+    filtered_data(filtered)
+  })
+  
+  observeEvent (input$update, {
     selected <- process_sensor_input(input$sensor_input, all_sensors)
     req(length(selected) > 0, input$year_select)
     
-    temp %>%
+    filtered <- temp %>%
       filter(
         sensor %in% selected,
         YYYY %in% input$year_select,
@@ -107,6 +134,7 @@ server <- function(input, output, session) {
         HH >= hour_range()[1], 
         HH <= hour_range()[2]
       )
+    filtered_data(filtered)
   })
   
   timeseriesServer("ts1", data = filtered_data, variable = reactive(input$variable))
