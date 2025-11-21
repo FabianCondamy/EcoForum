@@ -216,8 +216,26 @@ ui <- fluidPage(
           tags$details(
             tags$summary("Explications (cliquer pour dérouler)"),
             tags$p("Cette page permet d'explorer les statistiques globales et celles d'un seul capteur sélectionné…")
-          )
+          )),
+        
+        tabPanel(
+          "Section vierge",
+          fluidRow(
+            column(
+            12,
+            div(
+              h3("Nouvelle page vierge"),
+              tags$hr(),
+              p("Cette page est prête à être remplie avec du contenu.")
+            ),
+            tags$br(),
+            tags$details(
+              tags$summary("Explications (cliquer pour dérouler)"),
+              tags$p("À compléter")
+            )
+          ))
         )
+        
       )
     )
   )
