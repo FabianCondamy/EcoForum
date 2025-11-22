@@ -6,6 +6,13 @@ timeseriesUI <- function(id) {
       type = 4,              # type de spinner
       color = "#56B4E9",     # couleur Okabe-Ito (bleu)
       size = 1.2             # taille du spinner
+    ),
+    tags$br(),
+    tags$details(
+      tags$summary("Explications (cliquer pour dérouler)"),
+      tags$p("Ce graphique montre l’évolution de la variable choisie en fonction du temps. 
+                   Les différentes couleurs correspondent aux années sélectionnées. 
+                   Vous pouvez filtrer les capteurs, les dates et les heures via le menu à gauche.")
     )
   )
 }

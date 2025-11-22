@@ -149,7 +149,7 @@ server <- function(input, output, session) {
   timeseriesServer("ts1", data = filtered_data, variable = reactive(input$variable))
   statsServer("stat1", data = filtered_data, variable = reactive(input$variable))
   mapServer("map1", data = filtered_data, variable = reactive(input$variable), tiles = tiles_global)
-  summaryServer("sum1", data = filtered_data, variable = reactive(input$variable))
+  summaryServer("sum1",filtered_data = filtered_data,selected_variable = reactive(input$variable))
   
   # Last panel 
   
@@ -217,4 +217,6 @@ server <- function(input, output, session) {
   
   timeseriesServer("ts1_single", single_sensor_data, single_variable)
   statsServer("stat1_single", single_sensor_data, single_variable)
+  
+  NewSectionServer("new_section")
 }

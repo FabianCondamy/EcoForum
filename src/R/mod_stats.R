@@ -6,6 +6,11 @@ statsUI <- function(id) {
       type = 4,              # type de spinner
       color = "#56B4E9",     # couleur Okabe-Ito (bleu)
       size = 1.2             # taille du spinner
+    ),
+    tags$br(),
+    tags$details(
+      tags$summary("Explications (cliquer pour dérouler)"),
+      tags$p("Ces boxplots montrent la distribution de la variable choisie pour chaque année et chaque capteur.")
     )
   )
 }

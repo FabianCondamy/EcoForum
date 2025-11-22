@@ -74,6 +74,7 @@ ui <- fluidPage(
     transform: translateY(-50%) rotate(-90deg);
   }
 ")),
+  
   titlePanel("Analyse des Températures par Zone"),
   
   sidebarLayout(
@@ -130,112 +131,29 @@ ui <- fluidPage(
     ),
     
     mainPanel(
+      
       tabsetPanel(
+        
         tabPanel(
           "Température vs DOY",
-          timeseriesUI("ts1"),
-          tags$br(),
-          tags$details(
-            tags$summary("Explications (cliquer pour dérouler)"),
-            tags$p("Ce graphique montre l’évolution de la variable choisie en fonction du temps. 
-                   Les différentes couleurs correspondent aux années sélectionnées. 
-                   Vous pouvez filtrer les capteurs, les dates et les heures via le menu à gauche.")
-          )
-        ),
+          timeseriesUI("ts1")),
         
         tabPanel(
           "Boxplots",
-          statsUI("stat1"),
-          tags$br(),
-          tags$details(
-            tags$summary("Explications (cliquer pour dérouler)"),
-            tags$p("Ces boxplots montrent la distribution de la variable choisie pour chaque année et chaque capteur.")
-          )
-        ),
+          statsUI("stat1")),
         
         tabPanel(
           "Carte des zones",
-          mapUI("map1"),
-          tags$br(),
-          tags$details(
-            tags$summary("Explications (cliquer pour dérouler)"),
-            tags$p("La carte montre la position des capteurs et leur valeur selon une échelle de couleurs. 
-                   Les bâtiments et zones neutres ne sont pas colorés.")
-          )
-        ),
+          mapUI("map1")),
         
         tabPanel(
           "Résumé statistique",
-          summaryUI("sum1"),
-          tags$br(),
-          tags$details(
-            tags$summary("Explications (cliquer pour dérouler)"),
-            tags$p("Ce tableau résume les statistiques principales : moyenne, écart-type, min, max et nombre de mesures par capteur.")
-          )
-        ),
-        
-        tabPanel(
-          "Résumé statistique_1",
-          fluidRow(
-            column(4,wellPanel(
-                style = "padding: 15px;",
-                h4("Valeur minimale (globale)", align = "center"),
-                tags$hr(),
-                h3(textOutput("global_min"), align = "center")
-              )),
-            column(4,wellPanel(
-                style = "padding: 15px;",
-                h4("Valeur moyenne (globale)", align = "center"),
-                tags$hr(),
-                h3(textOutput("global_mean"), align = "center")
-              )),
-            column(4,wellPanel(
-                style = "padding: 15px;",
-                h4("Valeur maximale (globale)", align = "center"),
-                tags$hr(),
-                h3(textOutput("global_max"), align = "center"))
-              )),
-          
-          tags$br(),
-          
-          fluidRow(
-            column(3,wellPanel(h4("Choisir un capteur"),numericInput("sensor_id", "Numéro du capteur :", value = 1, min = 1))),
-            column(3,wellPanel(h4("Min (capteur choisi)"),textOutput("sensor_min"))),
-            column(3,wellPanel(h4("Moyenne (capteur choisi)"),textOutput("sensor_mean"))),
-            column(3,wellPanel(h4("Max (capteur choisi)"),textOutput("sensor_max")))
-          ),
-          tags$br(),
-          
-          fluidRow(
-            column(6,wellPanel(h4("Température vs DOY"),timeseriesUI("ts1_single"))),
-            column(6,wellPanel(h4("Boxplots"), statsUI("stat1_single")))
-          ),
-          
-          tags$br(),
-          
-          tags$details(
-            tags$summary("Explications (cliquer pour dérouler)"),
-            tags$p("Cette page permet d'explorer les statistiques globales et celles d'un seul capteur sélectionné…")
-          )),
-        
+          summaryUI("sum1")),
+
         tabPanel(
           "Section vierge",
-          fluidRow(
-            column(
-            12,
-            div(
-              h3("Nouvelle page vierge"),
-              tags$hr(),
-              p("Cette page est prête à être remplie avec du contenu.")
-            ),
-            tags$br(),
-            tags$details(
-              tags$summary("Explications (cliquer pour dérouler)"),
-              tags$p("À compléter")
-            )
-          ))
-        )
-        
+          NewSectionUI("new_section"))
+        # À compléter avec du contenu futur dans le fichier "mod_newsection.R"
       )
     )
   )

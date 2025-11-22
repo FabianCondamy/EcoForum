@@ -6,6 +6,12 @@ mapUI <- function(id) {
       type = 4,              # type de spinner
       color = "#56B4E9",     # couleur Okabe-Ito (bleu)
       size = 1.2             # taille du spinner
+    ),
+    tags$br(),
+    tags$details(
+      tags$summary("Explications (cliquer pour dérouler)"),
+      tags$p("La carte montre la position des capteurs et leur valeur selon une échelle de couleurs. 
+                   Les bâtiments et zones neutres ne sont pas colorés.")
     )
   )
 }
