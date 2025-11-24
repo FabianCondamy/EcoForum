@@ -31,6 +31,25 @@ ui <- fluidPage(
                     min = 0, max = 23, value = c(0, 23), step = 1)),
       tags$div(
         style = "border: 1px solid #ddd; padding: 10px; border-radius: 8px; margin-top: 10px;",
+        # Кнопка-крестик
+        tags$div(
+          style = "position: relative;",
+        
+        actionButton(
+          inputId = "clear_sensors",
+          label = NULL,
+          icon = icon("times"),   # маленький крестик
+          style = "
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      padding: 2px 6px;
+      font-size: 12px;
+      background-color: #f5f5f5;
+      border: 1px solid #ccc;
+      border-radius: 50%;
+    "
+        ),
         selectizeInput(
           inputId = "sensor_input",
           label = "Capteurs :",
@@ -44,7 +63,7 @@ ui <- fluidPage(
           label = "Sélectionner tout",
           width = "100%",
           style = "margin-top: 1px;"
-          )
+          ))
         ),
       fluidRow(
         column(6,actionButton("clear_all", "Tout réinitialiser", width = "100%")),

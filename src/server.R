@@ -142,6 +142,9 @@ server <- function(input, output, session) {
     confirmed_sensors(NULL)
   })
   
+  observeEvent(input$clear_sensors, {
+    updateSelectizeInput(session, "sensor_input", selected = character(0))
+  })
   
   # Apply filters only when user clicks "update"
   observeEvent (input$update, {
