@@ -127,7 +127,15 @@ ui <- fluidPage(
       fluidRow(
         column(6,actionButton("clear_all", "Tout réinitialiser", width = "100%")),
         column(6,actionButton("update", "Mettre à jour", width = "100%")),
-        style = "margin-top: 10px;")
+        style = "margin-top: 10px;"),
+        
+      fluidRow(
+        column(12,
+         div(style = "text-align:center; margin-top:20px;",
+             downloadButton("download_filtered", "Exporter les données filtrées", width = "30%")
+         )
+        )
+      )
     ),
     
     mainPanel(

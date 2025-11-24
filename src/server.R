@@ -109,6 +109,7 @@ server <- function(input, output, session) {
   # Primary filtering at start
   filtered_data <- reactiveVal(NULL)
   
+  
   observe({
     # Perform filtering immediately at start
     selected <- process_sensor_input(paste(all_sensors, collapse = ","), all_sensors)
@@ -145,6 +146,25 @@ server <- function(input, output, session) {
       )
     filtered_data(filtered)
   })
+  
+  # Download des données filtrées
+  output$download_filtered <- downloadHandler(
+    filename = function() {
+      var <- input$variable
+      years <- paste(input$year_select, collapse = "-")
+      doy <- input$doy_input
+      sensors <- gsub(" ", "", input$sensor_input)
+      paste0("donnees_filtrees_", var, "_", years, "_", doy, "_sensors", sensors, ".csv")
+    },
+    content = function(file) {
+      df <- filtered_data()                  # sf intact
+      coords <- sf::st_coordinates(df)       # matrice X/Y
+      df_export <- sf::st_drop_geometry(df)  # copie sans géométrie
+      df_export$Longitude <- coords[,1]
+      df_export$Latitude  <- coords[,2]
+      write.csv(df_export, file, row.names = FALSE)
+    }
+  )
   
   timeseriesServer("ts1", data = filtered_data, variable = reactive(input$variable))
   statsServer("stat1", data = filtered_data, variable = reactive(input$variable))
