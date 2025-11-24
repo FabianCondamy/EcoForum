@@ -24,24 +24,48 @@ server <- function(input, output, session) {
   
   # Crée une liste de tous les capteurs valides
   all_sensors <- sort(unique(temp$sensor))
+  all_sensors_str <- as.character(all_sensors)
   
-  selected_sensors <- reactiveVal(NULL)
+  confirmed_sensors <- reactiveVal(all_sensors)
+  
+  #  selected_sensors <- reactiveVal(NULL)
   
   # Function for processing the input string
-  process_sensor_input <- function(txt, valid_sensors) {
-    if (is.null(txt) || txt == "") return(NULL)
-    txt <- gsub("^,+|,+$", "", gsub(" ", "", txt))
-    nums <- as.numeric(unlist(strsplit(txt, ",")))
-    nums <- nums[!is.na(nums)]
-    if (!is.null(valid_sensors) && length(valid_sensors) > 0) {
-      nums <- nums[nums %in% valid_sensors]
-    }
-    return(nums)
-  }
+  #  process_sensor_input <- function(txt, valid_sensors) {
+  #    if (is.null(txt) || txt == "") return(NULL)
+  #    txt <- gsub("^,+|,+$", "", gsub(" ", "", txt))
+  #    nums <- as.numeric(unlist(strsplit(txt, ",")))
+  #    nums <- nums[!is.na(nums)]
+  #    if (!is.null(valid_sensors) && length(valid_sensors) > 0) {
+  #      nums <- nums[nums %in% valid_sensors]
+  #    }
+  #    return(nums)
+  #  }
+  
+  
+  # --- заполнение selectize в UI при старте ---
+  observe({
+    updateSelectizeInput(
+      session,
+      "sensor_input",
+      choices = all_sensors_str,
+      selected = all_sensors_str,  # изначально все выбраны
+      server = FALSE               # server = FALSE, чтобы дропдаун был полноценным
+    )
+  })
   
   # button "Sélectionner tout"
   observeEvent(input$select_all_sensors, {
-    updateTextInput(session, "sensor_input", value = paste(all_sensors, collapse = ","))
+    updateSelectizeInput(session, 
+                         "sensor_input", 
+                         selected = all_sensors_str, 
+                         server = FALSE)
+    })
+  
+  selected_sensors <- reactive({
+    req(input$sensor_input)
+    nums <- as.numeric(input$sensor_input)
+    nums[!is.na(nums) & nums %in% all_sensors]
   })
   
   doy_range <- reactive({
@@ -75,19 +99,21 @@ server <- function(input, output, session) {
     temp
   })
   
+  # Primary filtering at start
+  filtered_data <- reactiveVal(NULL)
   
   # Remplissage dynamique des choix
   observe({
-    
-    #   df <- data_available()
     
     updateCheckboxGroupInput(session, "year_select",
                              choices = sort(unique(temp$YYYY)),
                              selected = unique(temp$YYYY))
     
-    # sensors
-    updateTextInput(session, "sensor_input",
-                    value = paste(all_sensors, collapse = ","))
+    # sensors: заполняем selectize выбором и предзаполняем all_sensors
+    updateSelectizeInput(session, "sensor_input",
+                         choices = all_sensors,
+                         selected = all_sensors,                        ,
+                         server = TRUE)
     
     # DOY
     updateTextInput(session, "doy_input", 
@@ -109,13 +135,19 @@ server <- function(input, output, session) {
   # Primary filtering at start
   filtered_data <- reactiveVal(NULL)
   
-  
   observe({
-    # Perform filtering immediately at start
-    selected <- process_sensor_input(paste(all_sensors, collapse = ","), all_sensors)
+    
+    # Use confirmed_sensors() so filtering changes only when confirmed (at start it's all_sensors)
+    sel <- confirmed_sensors()
+    # если ничего не подтверждено — не фильтровать (или можно оставить пустой набор)
+    if (is.null(sel) || length(sel) == 0) {
+      filtered_data(NULL)
+      return()
+    }
+    
     filtered <- temp %>%
       filter(
-        sensor %in% selected,
+        sensor %in% sel,
         YYYY %in% unique(temp$YYYY),
         doy >= 1, doy <= 365,
         HH >= 0, HH <= 23
@@ -128,16 +160,22 @@ server <- function(input, output, session) {
     updateCheckboxGroupInput(session, "year_select", selected = character(0))
     updateTextInput(session, "doy_input", value = "")
     updateSliderInput(session, "hour_range", value = c(0, 23))
-    updateTextInput(session, "sensor_input", value = "")
+    updateSelectizeInput(session, "sensor_input", selected = character(0), server = FALSE)
+    
+    confirmed_sensors(NULL)
   })
   
+  
+  # Apply filters only when user clicks "update"
   observeEvent (input$update, {
-    selected <- process_sensor_input(input$sensor_input, all_sensors)
-    req(length(selected) > 0, input$year_select)
+    sel <- selected_sensors()
+    req(!is.null(sel) && length(sel) > 0, input$year_select)
+    
+    confirmed_sensors(sel)
     
     filtered <- temp %>%
       filter(
-        sensor %in% selected,
+        sensor %in% sel,
         YYYY %in% input$year_select,
         doy >= doy_range()[1], 
         doy <= doy_range()[2],
