@@ -28,29 +28,14 @@ server <- function(input, output, session) {
   
   confirmed_sensors <- reactiveVal(all_sensors)
   
-  #  selected_sensors <- reactiveVal(NULL)
-  
-  # Function for processing the input string
-  #  process_sensor_input <- function(txt, valid_sensors) {
-  #    if (is.null(txt) || txt == "") return(NULL)
-  #    txt <- gsub("^,+|,+$", "", gsub(" ", "", txt))
-  #    nums <- as.numeric(unlist(strsplit(txt, ",")))
-  #    nums <- nums[!is.na(nums)]
-  #    if (!is.null(valid_sensors) && length(valid_sensors) > 0) {
-  #      nums <- nums[nums %in% valid_sensors]
-  #    }
-  #    return(nums)
-  #  }
-  
-  
-  # --- заполнение selectize в UI при старте ---
+  # selectize in UI
   observe({
     updateSelectizeInput(
       session,
       "sensor_input",
       choices = all_sensors_str,
-      selected = all_sensors_str,  # изначально все выбраны
-      server = FALSE               # server = FALSE, чтобы дропдаун был полноценным
+      selected = all_sensors_str,
+      server = FALSE
     )
   })
   
@@ -109,7 +94,7 @@ server <- function(input, output, session) {
                              choices = sort(unique(temp$YYYY)),
                              selected = unique(temp$YYYY))
     
-    # sensors: заполняем selectize выбором и предзаполняем all_sensors
+    # sensors: selectize -> all_sensors
     updateSelectizeInput(session, "sensor_input",
                          choices = all_sensors,
                          selected = all_sensors,                        ,
@@ -122,10 +107,6 @@ server <- function(input, output, session) {
     # Heures (slider)
     updateSliderInput(session, "hour_range", 
                       value = c(0, 23))
-    
-#    updateCheckboxGroupInput(session, "sensor_select",
-#                             choices = sort(unique(temp$sensor)),
-#                             selected = unique(temp$sensor))
   })
   
   hour_range <- reactive({
@@ -139,7 +120,6 @@ server <- function(input, output, session) {
     
     # Use confirmed_sensors() so filtering changes only when confirmed (at start it's all_sensors)
     sel <- confirmed_sensors()
-    # если ничего не подтверждено — не фильтровать (или можно оставить пустой набор)
     if (is.null(sel) || length(sel) == 0) {
       filtered_data(NULL)
       return()
@@ -191,7 +171,7 @@ server <- function(input, output, session) {
       var <- input$variable
       years <- paste(input$year_select, collapse = "-")
       doy <- input$doy_input
-      sensors <- gsub(" ", "", input$sensor_input)
+      sensors <- paste(input$sensor_input, collapse = ",")
       paste0("donnees_filtrees_", var, "_", years, "_", doy, "_sensors", sensors, ".csv")
     },
     content = function(file) {

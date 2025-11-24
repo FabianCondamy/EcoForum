@@ -43,7 +43,6 @@ ui <- fluidPage(
           style = "margin-top: 1px;"
           )
         ),
-#      checkboxGroupInput("sensor_select", "Capteurs :", choices = NULL),
       fluidRow(
         column(6,actionButton("clear_all", "Tout réinitialiser", width = "100%")),
         column(6,actionButton("update", "Mettre à jour", width = "100%")),
