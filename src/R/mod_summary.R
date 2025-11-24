@@ -29,7 +29,7 @@ summaryUI <- function(id) {
       fluidRow(
         column(3, wellPanel(
           h4("Choisir un capteur"),
-          numericInput(ns("sensor_id"), "Numéro du capteur :", value = 1, min = 1)
+          selectInput(ns("sensor_id"), "Numéro du capteur :", choices = NULL)
         )),
         column(3, wellPanel(
           h4("Min (capteur choisi)"),
@@ -69,6 +69,23 @@ summaryUI <- function(id) {
 summaryServer <- function(id, filtered_data, selected_variable) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
+    
+    observe({
+      req(filtered_data())
+      sensors <- sort(unique(filtered_data()$sensor))
+      
+      if (length(sensors) == 1) {
+        # Un seul capteur → on fixe directement la valeur
+        updateSelectInput(session, "sensor_id",
+                          choices = sensors,
+                          selected = sensors)
+      } else {
+        # Plusieurs capteurs → on propose uniquement ceux présents
+        updateSelectInput(session, "sensor_id",
+                          choices = sensors,
+                          selected = sensors[1])  # par défaut le premier
+      }
+    })
     
     global_data <- reactive({
       req(filtered_data())
