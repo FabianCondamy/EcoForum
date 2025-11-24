@@ -1,12 +1,4 @@
-# библиотеки
-library(dplyr)
-library(ggplot2)
-library(lubridate)
-library(sf)
-library(tidyr)
-library(maptiles)
-
-# палитра Okabe-Ito
+# Palette daltonienne Okabe–Ito
 okabe_ito <- c(
   "#CC79A7",      # rose
   "#0072B2",     # bleu
@@ -18,9 +10,6 @@ okabe_ito <- c(
   "#D55E00"     # rouge
   
 )
-
-# Загрузка и подготовка данных
-source("R/data_prep.R")
 
 # Modules
 source("R/mod_serietemp.R")
