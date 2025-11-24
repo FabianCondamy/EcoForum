@@ -2,78 +2,6 @@ library(shiny)
 library(shinycssloaders)
 
 ui <- fluidPage(
-  # CSS pour les blocs <details> 
-  tags$style(HTML("
-  /* ---- Onglets modernisés ---- */
-  .nav-tabs > li > a {
-    border-radius: 10px 10px 0 0 !important;
-    background-color: #e8e8e8 !important;
-    color: #333 !important;
-    margin-right: 4px !important;
-    padding: 10px 15px !important;
-    font-weight: 500;
-  }
-  
-  .nav-tabs > li.active > a,
-  .nav-tabs > li.active > a:focus,
-  .nav-tabs > li.active > a:hover {
-    background-color: #56B4E9 !important;   /* bleu Okabe-Ito */
-    color: white !important;
-    border-radius: 10px 10px 0 0 !important;
-    border: none !important;
-  }
-
-  .tab-content {
-    border: 1px solid #ccc;
-    border-radius: 0 10px 10px 10px !important;
-    padding: 15px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    background-color: white;
-  }
-
-  /* ---- Sidebar et panels arrondis ---- */
-  .well, .panel, .panel-body, .form-group, .input-group {
-    border-radius: 12px !important;
-    background: #f9f9f9 !important;
-    padding: 12px !important;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-    border: 1px solid #ddd !important;
-  }
-
-  /* ---- Blocs <details> modernisés ---- */
-  details {
-    border: 1px solid #aaa;
-    padding: 12px;
-    border-radius: 12px;
-    margin-top: 15px;
-    background-color: #fafafa;
-    position: relative;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.07);
-  }
-
-  summary {
-    font-weight: 600;
-    font-size: 15px;
-    cursor: pointer;
-    list-style: none;
-    padding-right: 20px;
-  }
-
-  /* Triangle animé */
-  summary::after {
-    content: '\\25B6'; /* triangle */
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%) rotate(90deg);
-    transition: transform 0.2s;
-    font-size: 12px;
-  }
-
-  details[open] summary::after {
-    transform: translateY(-50%) rotate(-90deg);
-  }
-")),
   
   titlePanel("Analyse des Températures par Zone"),
   
@@ -164,5 +92,6 @@ ui <- fluidPage(
         # À compléter avec du contenu futur dans le fichier "mod_newsection.R"
       )
     )
-  )
+  ),
+  tags$head(includeCSS("www/style.css"))
 )

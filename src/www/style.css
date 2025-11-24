@@ -1,0 +1,77 @@
+/* ---- Onglets modernisés avec relief ---- */
+.nav-tabs > li > a {
+  border-radius: 10px 10px 0 0 !important;
+  background-color: #e8e8e8 !important;
+  color: #333 !important;
+  margin-right: 4px !important;
+  padding: 10px 15px !important;
+  font-weight: 500 !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15) !important; /* relief */
+}
+
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:focus,
+.nav-tabs > li.active > a:hover {
+  background-color: #56B4E9 !important;   /* bleu Okabe-Ito */
+  color: white !important;
+  border-radius: 10px 10px 0 0 !important;
+  border: none !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25) !important; /* relief actif */
+}
+
+.tab-content {
+  border: 1px solid #ccc !important;
+  border-radius: 0 10px 10px 10px !important;
+  padding: 15px !important;
+  background-color: white !important;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15) !important; /* relief du contenu */
+}
+
+/* ---- Sidebar et panels arrondis ---- */
+.well, .panel, .panel-body, .form-group, .input-group {
+  border-radius: 12px !important;
+  background: #f9f9f9 !important;
+  padding: 12px !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08) !important;
+  border: 1px solid #ddd !important;
+}
+
+/* ---- Boutons Shiny avec relief ---- */
+.btn {
+  border-radius: 6px !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+}
+
+/* ---- Blocs <details> modernisés ---- */
+details {
+  border: 1px solid #aaa !important;
+  padding: 12px !important;
+  border-radius: 12px !important;
+  margin-top: 15px !important;
+  background-color: #fafafa !important;
+  position: relative !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.07) !important;
+}
+
+summary {
+  font-weight: 600 !important;
+  font-size: 15px !important;
+  cursor: pointer !important;
+  list-style: none !important;
+  padding-right: 20px !important;
+}
+
+/* Triangle animé */
+summary::after {
+  content: '\25B6'; /* triangle */
+  position: absolute !important;
+  right: 0 !important;
+  top: 50% !important;
+  transform: translateY(-50%) rotate(90deg) !important;
+  transition: transform 0.2s !important;
+  font-size: 12px !important;
+}
+
+details[open] summary::after {
+  transform: translateY(-50%) rotate(-90deg) !important;
+}
