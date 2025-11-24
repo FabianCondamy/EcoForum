@@ -2,49 +2,57 @@ summaryUI <- function(id) {
   ns <- NS(id)  
   
   tagList(
+    tags$div(
+      style = "border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 20px;",
+      h3("Statistiques globales", align = "center"),
+      tags$hr(),
+      
       fluidRow(
-        # Statistiques globales
         column(4, wellPanel(
           style = "padding: 15px;",
-          h4("Valeur minimale (globale)", align = "center"),
+          h4("Valeur minimale", align = "center"),
           tags$hr(),
           h3(textOutput(ns("global_min")), align = "center")
         )),
         column(4, wellPanel(
           style = "padding: 15px;",
-          h4("Valeur moyenne (globale)", align = "center"),
+          h4("Valeur moyenne", align = "center"),
           tags$hr(),
           h3(textOutput(ns("global_mean")), align = "center")
         )),
         column(4, wellPanel(
           style = "padding: 15px;",
-          h4("Valeur maximale (globale)", align = "center"),
+          h4("Valeur maximale", align = "center"),
           tags$hr(),
           h3(textOutput(ns("global_max")), align = "center")
         ))
+      )
       ),
       
       tags$br(),
       
+    tags$div(
+      style = "border: 1px solid #ddd; padding: 15px; border-radius: 8px;",
+      h3("Statistiques par capteur", align = "center"),
+      tags$hr(),
+      
       fluidRow(
-        column(3, wellPanel(
-          h4("Choisir un capteur"),
+        column(3, 
           selectInput(ns("sensor_id"), "Numéro du capteur :", choices = NULL)
-        )),
+        ),
         column(3, wellPanel(
-          h4("Min (capteur choisi)"),
+          h4("Valeur minimale", align = "center"),
           textOutput(ns("sensor_min"))
         )),
         column(3, wellPanel(
-          h4("Moyenne (capteur choisi)"),
+          h4("Valeur moyenne", align = "center"),
           textOutput(ns("sensor_mean"))
         )),
         column(3, wellPanel(
-          h4("Max (capteur choisi)"),
+          h4("Valeur maximale", align = "center"),
           textOutput(ns("sensor_max"))
         ))
       ),
-      
       tags$br(),
       
       fluidRow(
@@ -56,7 +64,8 @@ summaryUI <- function(id) {
           h4("Boxplots"),
           statsUI(ns("stat1_single"))
         ))
-      ),
+      )
+    ),
       
       tags$br(),
       tags$details(
