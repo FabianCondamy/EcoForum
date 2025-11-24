@@ -53,29 +53,29 @@ server <- function(input, output, session) {
     nums[!is.na(nums) & nums %in% all_sensors]
   })
   
-  doy_range <- reactive({
+  # doy text calculation
+  doy_to_date <- function(doy) {
+    # thinking that every year 365 days
+    month_days <- c(31,28,31,30,31,30,31,31,30,31,30,31)
+    month_names <- c("Janv", "Févr", "Mars", "Avr", "Mai", "Juin",
+                     "Juil", "Août", "Sept", "Oct", "Nov", "Déc")
     
-    txt <- input$doy_input
-    
-    # default range
-    if (is.null(txt) || txt == "") return(c(1, 365))
-    
-    # replace all possible separators with "-"
-    clean <- gsub("[–—:]", "-", txt)
-    clean <- gsub(" ", "", clean)
-    
-    parts <- unlist(strsplit(clean, "-"))
-    nums <- suppressWarnings(as.numeric(parts))
-    nums <- nums[!is.na(nums)]
-    
-    if (length(nums) < 2) return(c(1, 365))
-    start <- min(nums[1], nums[2])
-    end   <- max(nums[1], nums[2])
-
-    start <- max(1, min(start, 365))
-    end   <- max(1, min(end, 365))
-    
-    return(c(start, end))
+    month <- 1
+    remaining <- doy
+    while(remaining > month_days[month]) {
+      remaining <- remaining - month_days[month]
+      month <- month + 1
+    }
+    day <- remaining
+    paste0(day, " ", month_names[month])
+  }
+  
+  # doy text under slider
+  output$doy_text <- renderText({
+    req(input$doy_range)
+    start_date <- doy_to_date(input$doy_range[1])
+    end_date   <- doy_to_date(input$doy_range[2])
+    paste0("Du ", start_date, " au ", end_date)
   })
   
   data_available <- reactive({
@@ -101,17 +101,14 @@ server <- function(input, output, session) {
                          server = TRUE)
     
     # DOY
-    updateTextInput(session, "doy_input", 
-                    value = "1-365")
+    updateSliderInput(session, "doy_range", 
+                      value = c(1, 365))
     
     # Heures (slider)
     updateSliderInput(session, "hour_range", 
                       value = c(0, 23))
   })
   
-  hour_range <- reactive({
-    input$hour_range
-  })
   
   # Primary filtering at start
   filtered_data <- reactiveVal(NULL)
@@ -138,7 +135,7 @@ server <- function(input, output, session) {
   observeEvent(input$clear_all, {
 
     updateCheckboxGroupInput(session, "year_select", selected = character(0))
-    updateTextInput(session, "doy_input", value = "")
+    updateSliderInput(session, "doy_range", value = c(1, 365))
     updateSliderInput(session, "hour_range", value = c(0, 23))
     updateSelectizeInput(session, "sensor_input", selected = character(0), server = FALSE)
     
@@ -149,7 +146,8 @@ server <- function(input, output, session) {
   # Apply filters only when user clicks "update"
   observeEvent (input$update, {
     sel <- selected_sensors()
-    req(!is.null(sel) && length(sel) > 0, input$year_select)
+    req(!is.null(sel) && length(sel) > 0)
+    req(!is.null(input$year_select) && length(input$year_select) > 0)
     
     confirmed_sensors(sel)
     
@@ -157,10 +155,10 @@ server <- function(input, output, session) {
       filter(
         sensor %in% sel,
         YYYY %in% input$year_select,
-        doy >= doy_range()[1], 
-        doy <= doy_range()[2],
-        HH >= hour_range()[1], 
-        HH <= hour_range()[2]
+        doy >= input$doy_range[1], 
+        doy <= input$doy_range[2],
+        HH >= input$hour_range[1], 
+        HH <= input$hour_range[2]
       )
     filtered_data(filtered)
   })
@@ -171,7 +169,7 @@ server <- function(input, output, session) {
       var <- input$variable
       years <- paste(input$year_select, collapse = "-")
       doy <- input$doy_input
-      sensors <- paste(input$sensor_input, collapse = ",")
+      sensors <- gsub(" ", "", input$sensor_input)
       paste0("donnees_filtrees_", var, "_", years, "_", doy, "_sensors", sensors, ".csv")
     },
     content = function(file) {

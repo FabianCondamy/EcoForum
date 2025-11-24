@@ -16,16 +16,19 @@ ui <- fluidPage(
                   )
                   ),
       checkboxGroupInput("year_select", "Année(s) :", choices = NULL),
-      textInput(
-        inputId = "doy_input",
-        label = "Période de l'année (DOY):",
-        placeholder = "ex: 1-365"
-      ),
-#      sliderInput("doy_range", "Période de l'année (DOY) :", 
-#                  min = 1, max = 365, value = c(1, 365), step = 1),
-
-      sliderInput("hour_range", "Heure(s) de la journée :", 
-                  min = 0, max = 23, value = c(0, 23), step = 1),
+      tags$div(
+        style = "border: 1px solid #ddd; padding: 10px; border-radius: 8px; margin-top: 10px;",
+        sliderInput("doy_range", "Période de l'année (DOY) :", 
+                  min = 1, max = 365, value = c(1, 365), step = 1),
+        div(
+          style = "text-align: center;",
+          textOutput("doy_text")
+        )
+        ),
+      tags$div(
+        style = "margin-top: 10px;",
+        sliderInput("hour_range", "Heure(s) de la journée :", 
+                    min = 0, max = 23, value = c(0, 23), step = 1)),
       tags$div(
         style = "border: 1px solid #ddd; padding: 10px; border-radius: 8px; margin-top: 10px;",
         selectizeInput(
