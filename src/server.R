@@ -16,7 +16,7 @@ server <- function(input, output, session) {
   tiles   <- reactive({ data_loaded()$tiles })
   
   
-  # 3. Mise à jour des inputs (Listes déroulantes)
+  # Mise à jour des inputs (Listes déroulantes)
   observe({
     # On attend que les données soient là
     req(dataset())
@@ -31,7 +31,7 @@ server <- function(input, output, session) {
                              selected = unique(df$sensor))
   })
   
-  # 4. Filtrage des données
+  # Filtrage des données
   filtered_data <- eventReactive(input$update, {
     req(input$sensor_select, input$year_select, dataset())
     
@@ -43,7 +43,7 @@ server <- function(input, output, session) {
   }, ignoreNULL = FALSE)
   
   
-  # 5. Appel des Modules de Visualisation
+  # Appel des Modules de Visualisation
   timeseriesServer("ts1", data = filtered_data, variable = reactive(input$variable))
   
   statsServer("stat1", data = filtered_data, variable = reactive(input$variable))

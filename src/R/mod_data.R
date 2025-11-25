@@ -28,7 +28,7 @@ ecoforum_data <- function(
   temp <- NULL
   tiles <- NULL
 
-  # OPTION 1 : TOUS LES CAPTEURS
+
 
 temp <- read.csv(path_temp, sep = ";") %>%
   separate(coord, sep = ",", into = c("Longitude", "Latitude")) %>%
@@ -47,7 +47,6 @@ tiles <- tryCatch({
 }, error = function(e) return(NULL))
 
   
-  # OPTION 2 : CAPTEUR SEUL (TEST)
   # temp <- read.csv(path_capteur, sep = ",") %>%
   #   select(
   #     date_raw = Date.et.heure..CET.,
@@ -67,7 +66,8 @@ tiles <- tryCatch({
   # 
   # # Pas de carte pour ce fichier (pas de GPS)
   # tiles <- NULL
-  # 
+
+
   # Enrichissement
   temp_final <- temp %>%
     left_join(habitat, by = "sensor") %>%
