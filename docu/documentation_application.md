@@ -1,7 +1,7 @@
 ---
 title: "Documentation de l'application Shiny"
 author: "Anne-Laure"
-date: "`r Sys.Date()`"
+date: 25/11/2025
 format: html
 ---
 
