@@ -8,13 +8,41 @@ ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
       width = 3,
-      selectInput("variable", "Choisir une variable :",
-                  choices = c(
-                    "Température corrigée (temp.corr)" = "temp.corr",
-                    "Écart (%) (temp.ecart.prc)" = "temp.ecart.prc",
-                    "Écart brut (temp.ecart.raw)" = "temp.ecart.raw"
-                  )
-                  ),
+      selectInput("variable","Choisir une variable :",
+                  choices = c("Température corrigée (temp.corr)" = "temp.corr",
+                              "Écart (%) (temp.ecart.prc)" = "temp.ecart.prc",
+                              "Écart brut (temp.ecart.raw)" = "temp.ecart.raw"),
+                  width = "100%", 
+                  selectize = FALSE),
+
+      # icon "?" on top selectInput
+      tags$span(icon("question"),id = "variable_help_icon"),
+      tags$div(id = "variable_help_text"),
+
+      tags$script(HTML("
+      const helpIcon = document.getElementById('variable_help_icon');
+      const helpText = document.getElementById('variable_help_text');
+      const variableInput = $('select#variable')[0];
+
+      function updateHelp() {
+        let selected = variableInput.value;
+        let text = '';
+        if(selected === 'temp.corr') {
+          text = '<b>FR:</b> Température corrigée (temp.corr) - température mesurée et calibrée.<br><b>EN:</b> Corrected temperature (temp.corr) - measured and calibrated temperature.';
+        } else if(selected === 'temp.ecart.raw') {
+          text = '<b>FR:</b> Écart brut (temp.ecart.raw) - différence entre température corrigée et référence.<br><b>EN:</b> Raw difference (temp.ecart.raw) - difference between corrected and reference temperature.';
+        } else if(selected === 'temp.ecart.prc') {
+          text = '<b>FR:</b> Écart (%) (temp.ecart.prc) - pourcentage d\\'écart par rapport à la référence.<br><b>EN:</b> Percentage difference (temp.ecart.prc) - percent deviation from reference temperature.';
+        }
+        helpText.innerHTML = text;
+      }
+
+      variableInput.addEventListener('change', updateHelp);
+      updateHelp();
+
+      helpIcon.addEventListener('mouseenter', () => { helpText.style.display = 'block'; });
+      helpIcon.addEventListener('mouseleave', () => { helpText.style.display = 'none'; });
+      ")),
       checkboxGroupInput("year_select", "Année(s) :", choices = NULL),
       tags$div(
         style = "border: 1px solid #ddd; padding: 10px; border-radius: 8px; margin-top: 10px;",
@@ -31,14 +59,14 @@ ui <- fluidPage(
                     min = 0, max = 23, value = c(0, 23), step = 1)),
       tags$div(
         style = "border: 1px solid #ddd; padding: 10px; border-radius: 8px; margin-top: 10px;",
-        # Кнопка-крестик
+        # Bouton Croix
         tags$div(
           style = "position: relative;",
         
         actionButton(
           inputId = "clear_sensors",
           label = NULL,
-          icon = icon("times"),   # маленький крестик
+          icon = icon("times"),
           style = "
       position: absolute;
       top: 5px;

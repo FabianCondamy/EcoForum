@@ -8,7 +8,7 @@ library(tidyterra)
 library(lubridate)
 
 server <- function(input, output, session) {
-  
+
   # Crée une liste de tous les capteurs valides
   all_sensors <- sort(unique(temp$sensor))
   all_sensors_str <- as.character(all_sensors)
