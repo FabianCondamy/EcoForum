@@ -1,32 +1,54 @@
 # EcoForum
 
 ## Description
-Cette application Shiny permet d'analyser des données de température mesurées par différents capteurs répartis dans plusieurs zones. Elle propose des visualisations interactives (séries temporelles, carte, statistiques descriptives). L'application a été restructurée de manière à faciliter le développement collaboratif en faisant une séparation back/front.
+Cette application Shiny permet d'analyser des données de température mesurées par différents capteurs répartis dans plusieurs zones. Elle propose des visualisations interactives (séries temporelles, carte, statistiques descriptives). L'application a été entièrement modularisée pour garantir la maintenabilité du code et faciliter le travail collaboratif.
 
 ---
 
-## Structure du projet
-L'application utilise désormais le sous-dossier `R/` pour le chargement automatique des fonctions et modules. On a les différents fichiers suivants :
+## Structure du Projet
 
-- **app.R** : point d'entrée de l'application.
-- **ui.R** : interface utilisateur principale, appel des modules. (front)
-- **server.R** : logique serveur principale. (back)
-- **R/** : dossier contenant le code qui gère le traitement des données et les sorties qui est chargé automatiquement par Shiny.
-  - **data_prep.R** : chargement et préparation des données.
-  - **mod_serietemp.R** : module de visualisation des séries temporelles.
-  - **mod_map.R** : module de cartographie interactive.
-  - **mod_stats.R** : module des boxplots comparatifs et d'autres éléments d'analyse de données.
-  - **mod_summary.R** : module du résumé statistique.
-
- ---
-
-## Données
-Les données sources ne sont pas incluses dans le répertoire de l'application mais se trouvent dans l'arborescence parente :
-- `../data/raw-data/`
-- `../data/derived-data/`
-
+Le projet se structure de la manière suivante : 
+```text
+EcoForum/
+├── data/                   # Données du projet
+│   ├── derived-data/       
+│   ├── images/             
+│   ├── new-csv/           
+│   └── raw-data/         
+│
+├── docu/                   # Documentation et archives
+│   ├── analyses/           
+│   ├── figures/            
+│   └── notices/            
+│
+└── src/                    # Code source de l'application
+    ├── app.R               # Lanceur de l'application
+    ├── server.R            # Logique serveur (Back-end)
+    ├── ui.R                # Interface utilisateur (Front-end)
+    └── R/                  # Modules et Fonctions (Chargement automatique)
+        ├── mod_data.R      # Gestion des données
+        ├── mod_map.R       # Module : Cartographie interactive
+        ├── mod_serietemp.R # Module : Séries temporelles
+        ├── mod_stats.R     # Module : Statistiques (Boxplots)
+        └── mod_summary.R   # Module : Tableau récapitulatif
+```
 ---
 
 ## Installation et Lancement
-1. Ouvrez le fichier `app.R` dans le sous-dossier `shiny_app` dans RStudio.
-2. Cliquez sur le bouton "Run App" en haut à droite.
+
+Les données doivent être présentes dans le dossier data/ à la racine du projet.
+
+**Comment lancer l'application ?**
+
+**Option 1 :**
+1. Dans l'explorateur de fichiers de RStudio, naviguez dans le dossier src/.
+2. Ouvrez le fichier `app.R`.
+3. Cliquez sur le bouton "Run App" (flèche verte) en haut à droite de l'éditeur de script.
+
+**Option 2 :**
+Pour lancer l'application sans ambiguïté sur le répertoire de travail, exécutez cette commande depuis la racine du projet :
+```r
+shiny::runApp("src")
+```
+
+Note technique : Les fichiers dans `src/R/` sont chargés automatiquement par Shiny au lancement, il n'est donc pas nécessaire de les sourcer manuellement (source()) dans `app.R`.
