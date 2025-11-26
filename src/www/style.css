@@ -109,3 +109,13 @@ details[open] summary::after {
   font-size: 12px;
   line-height: 1.4;
 }
+
+/* Minimum value */
+.value-min {
+  color: #009E73;
+}
+
+/* Maximum value*/
+.value-max {
+  color: #D55E00;
+}

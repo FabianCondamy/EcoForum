@@ -12,7 +12,7 @@ summaryUI <- function(id) {
           style = "padding: 15px;",
           h4("Valeur minimale", align = "center"),
           tags$hr(),
-          h3(textOutput(ns("global_min")), align = "center")
+          h3(textOutput(ns("global_min")), align = "center", class = "value-min")
         )),
         column(4, wellPanel(
           style = "padding: 15px;",
@@ -24,7 +24,7 @@ summaryUI <- function(id) {
           style = "padding: 15px;",
           h4("Valeur maximale", align = "center"),
           tags$hr(),
-          h3(textOutput(ns("global_max")), align = "center")
+          h3(textOutput(ns("global_max")), align = "center", class = "value-max")
         ))
       )
       ),
@@ -42,15 +42,15 @@ summaryUI <- function(id) {
         ),
         column(3, wellPanel(
           h4("Valeur minimale", align = "center"),
-          textOutput(ns("sensor_min"))
+          tags$span(textOutput(ns("sensor_min")), align = "center", class = "value-min")
         )),
         column(3, wellPanel(
           h4("Valeur moyenne", align = "center"),
-          textOutput(ns("sensor_mean"))
+          tags$span(textOutput(ns("sensor_mean")), align = "center")
         )),
         column(3, wellPanel(
           h4("Valeur maximale", align = "center"),
-          textOutput(ns("sensor_max"))
+          tags$span(textOutput(ns("sensor_max")), align = "center", class = "value-max")
         ))
       ),
       tags$br(),
