@@ -156,11 +156,24 @@ server <- function(input, output, session) {
   # Download des données filtrées
   output$download_filtered <- downloadHandler(
     filename = function() {
+      # 1) Variable sélectionnée
       var <- input$variable
-      years <- paste(input$year_select, collapse = "-")
-      doy <- input$doy_input
-      sensors <- gsub(" ", "", input$sensor_input)
-      paste0("donnees_filtrees_", var, "_", years, "_", doy, "_sensors", sensors, ".csv")
+      # 2) Années (triées, séparées par -)
+      years <- sort(input$year_select)
+      years_str <- paste(years, collapse = "-")
+      # 3) DOY (plage sous forme start-end)
+      doy_start <- input$doy_range[1]
+      doy_end   <- input$doy_range[2]
+      doy_str <- paste0(doy_start, "-", doy_end)
+      # 4) Heures
+      hour_start <- input$hour_range[1]
+      hour_end   <- input$hour_range[2]
+      hour_str <- paste0(hour_start, "-", hour_end)
+      # 5) Capteurs triés (toujours tous affichés)
+      sensors <- sort(as.numeric(input$sensor_input))
+      sensors_str <- paste(sensors, collapse = "-")
+      # 6) Construction finale du nom
+      paste0(var, "_", years_str, "_", doy_str, "_", hour_str, "_", sensors_str, ".csv")
     },
     content = function(file) {
       df <- filtered_data()                  # sf intact
