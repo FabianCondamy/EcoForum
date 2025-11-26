@@ -10,10 +10,3 @@ okabe_ito <- c(
   "#D55E00"     # rouge
   
 )
-
-# Modules
-source("R/mod_serietemp.R")
-source("R/mod_map.R")
-source("R/mod_stats.R")
-source("R/mod_summary.R")
-source("R/mod_newsection.R")
