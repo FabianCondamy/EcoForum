@@ -23,11 +23,16 @@ mapServer <- function(id, data, variable, tiles) {
       df <- data()
       var_name <- variable()
       
-      # On vérifie qu'il y a des données
+      # Vérification : Est-ce qu'on a des données ?
       req(nrow(df) > 0)
       
+      # Vérification : Est-ce qu'on a un fond de carte ?
+      validate(
+        need(!is.null(tiles()), "Ce fichier ne contient pas de coordonnées GPS. Impossible d'afficher la carte.")
+      )
+      
       ggplot() +
-        geom_spatraster_rgb(data = tiles) +
+        tidyterra::geom_spatraster_rgb(data = tiles()) + 
         geom_sf(data = df, aes(color = .data[[var_name]]), size = 3) +
         scale_color_viridis_c(option = "plasma") +
         labs(title = "Localisation des Capteurs", color = var_name) +

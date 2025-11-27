@@ -9,6 +9,13 @@ library(lubridate)
 
 server <- function(input, output, session) {
 
+  # On récupère les données chargées (c'est une reactive)
+  data_loaded <- dataServer("data_source")
+  
+  # Extrait le dataframe et les tuiles
+  dataset <- reactive({ data_loaded()$data })
+  tiles   <- reactive({ data_loaded()$tiles })
+  
   # Crée une liste de tous les capteurs valides
   all_sensors <- sort(unique(temp$sensor))
   all_sensors_str <- as.character(all_sensors)
@@ -187,7 +194,7 @@ server <- function(input, output, session) {
   
   timeseriesServer("ts1", data = filtered_data, variable = reactive(input$variable))
   statsServer("stat1", data = filtered_data, variable = reactive(input$variable))
-  mapServer("map1", data = filtered_data, variable = reactive(input$variable), tiles = tiles_global)
+  mapServer("map1", data = filtered_data, variable = reactive(input$variable), tiles = tiles)
   summaryServer("sum1",filtered_data = filtered_data,selected_variable = reactive(input$variable))
   
   NewSectionServer("new_section")
