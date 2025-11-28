@@ -86,9 +86,7 @@ tiles <- tryCatch({
 
 dataServer <- function(id) {
   moduleServer(id, function(input, output, session) {
-    raw_data <- reactive({
-      ecoforum_data()
-    })
+    raw_data <- ecoforum_data()
     return(raw_data)
   })
 }

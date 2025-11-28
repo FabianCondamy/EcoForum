@@ -13,11 +13,12 @@ server <- function(input, output, session) {
   data_loaded <- dataServer("data_source")
   
   # Extrait le dataframe et les tuiles
-  dataset <- reactive({ data_loaded()$data })
-  tiles   <- reactive({ data_loaded()$tiles })
+  dataset <- data_loaded$data
+  tiles   <- data_loaded$tiles
+  temp <- dataset
   
   # Crée une liste de tous les capteurs valides
-  all_sensors <- sort(unique(temp$sensor))
+  all_sensors <- sort(unique(dataset$sensor))
   all_sensors_str <- as.character(all_sensors)
   
   confirmed_sensors <- reactiveVal(all_sensors)
@@ -40,7 +41,6 @@ server <- function(input, output, session) {
                          selected = all_sensors_str, 
                          server = FALSE)
     })
-  
   selected_sensors <- reactive({
     req(input$sensor_input)
     nums <- as.numeric(input$sensor_input)
