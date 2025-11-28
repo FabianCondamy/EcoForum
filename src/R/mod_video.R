@@ -34,7 +34,9 @@ videoUI <- function(id) {
 }
 
 # Module server
-videoServer <- function(id, img_dir) {
+videoServer <- function(id) {
+  img_dir <- file.path("..","data","images")
+  
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
     
