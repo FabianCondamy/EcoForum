@@ -199,6 +199,7 @@ server <- function(input, output, session) {
   mapServer("map1", data = filtered_data, variable = reactive(input$variable), tiles = tiles)
   videoServer("player1")
   summaryServer("sum1",filtered_data = filtered_data,selected_variable = reactive(input$variable))
+  analyseServer("analyse1", data = filtered_data)
   
   NewSectionServer("new_section")
 }

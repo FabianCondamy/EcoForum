@@ -132,6 +132,10 @@ ui <- fluidPage(
           videoUI("player1")),
         
         tabPanel(
+          "Analyse",
+          analyseUI("analyse1")),
+        
+        tabPanel(
           "Section vierge",
           NewSectionUI("new_section"))
         # À compléter avec du contenu futur dans le fichier "mod_newsection.R"
