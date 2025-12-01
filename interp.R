@@ -74,9 +74,13 @@ interpolation=function(Y,min_doy,max_doy,min_HH,max_HH,contours=FALSE){
   # Variogramme
   v=variogram(temperature~1,df)
   v_mod_ok <- fit.variogram(v, model=vgm(model="Sph"))
+  print(plot(v,v_mod_ok))
 
   g=gstat(formula=temperature~1,model=v_mod_ok,data=df)
   z=predict(g,newdata=grid)
+  
+  rmse=sqrt(mean((df$temperature-z$var1.pred)^2))
+  print(paste0("RMSE :",rmse))
   
   # Rasterisation
   template=st_as_stars(st_bbox(df),dx=1,dy=1)
@@ -128,7 +132,7 @@ interpolation=function(Y,min_doy,max_doy,min_HH,max_HH,contours=FALSE){
       ylim=c(interp_bbox["ymin"],interp_bbox["ymax"])
     )
   
-  chemin="cartes_interpolees"
+  chemin="data_images"
   nom_fichier=sprintf("%s/interpolation_%d_doy%d_HH%d-%d.png",chemin,Y,min_doy,min_HH,max_HH)
   ggsave(nom_fichier,p,width=10,height=8,dpi=300)
   
@@ -141,10 +145,18 @@ interpolation=function(Y,min_doy,max_doy,min_HH,max_HH,contours=FALSE){
 ## chaque carte représente une interpolation de la température moyenne de chaque capteur dans un intervalle de 4h ##
 ## Pour que la fonction enregistre ces cartes, il faut enlever les 3 derniers commentaires de la fonction interpolation ##
 
+if (!dir.exists("data/images")) {
+  dir.create("data/images")
+}
+
 for (i in 2024:2025){
   for (j in 1:366){
     for (z in 1:6)
-    interpolation(i,j,j,4*(z-1),4*z-1)
+      if (file.exists(sprintf("%s/interpolation_%d_doy%d_HH%d-%d.png","data/images",i,j,4*(z-1),4*z-1))){
+      }
+    else {
+      interpolation(i,j,j,4*(z-1),4*z-1)
+    }
   }
 }
 
