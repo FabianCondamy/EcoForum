@@ -47,10 +47,6 @@ filtered_data=function(Y,min_doy,max_doy,min_HH,max_HH){
 }
 
 
-#df=df %>%
-#  group_by(geometry) %>%
-#  summarise(temperature=median(temperature))
-
 
 interpolation=function(Y,min_doy,max_doy,min_HH,max_HH,contours=FALSE){
   p=NULL
