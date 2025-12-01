@@ -4,28 +4,28 @@ videoUI <- function(id) {
   tagList(
     div(
       style = "max-width:600px; margin:0 auto; text-align:center;",
+      
       shinycssloaders::withSpinner(
         imageOutput(ns("img_current"), height = "500px"),
-        type = 4,
-        color = "#56B4E9",
-        size = 1.2
+        type = 4, color = "#56B4E9", size = 1.2
       ),
+      
       sliderInput(
-        ns("frame"), "Image :", 
-        min = 1, max = 1, value = 1, step = 1,
-        width = "100%"
+        ns("frame"), "Image :",
+        min = 1, max = 1, value = 1, step = 1, width = "100%"
       ),
+      
       div(
         style = "display:flex; justify-content: space-between; font-size:14px;",
         span(textOutput(ns("date_start"))),
         span(textOutput(ns("date_end")))
       ),
-      div(
-        style = "margin-top:5px;",
-        textOutput(ns("date_current"))
-      )),
       
+      div(style = "margin-top:5px;", textOutput(ns("date_current")))
+    ),
+    
     tags$br(),
+    
     tags$details(
       tags$summary("Explications (cliquer pour dérouler)"),
       tags$p("...")
@@ -35,48 +35,104 @@ videoUI <- function(id) {
 
 # Module server
 videoServer <- function(id) {
-  img_dir <- file.path("..","data","images")
+  
+  img_dir <- file.path("..", "data", "images")
   
   moduleServer(id, function(input, output, session) {
+    
     ns <- session$ns
     
-    # Liste des fichiers
+    # Lister les images
     files <- list.files(img_dir, pattern = "\\.png$", full.names = TRUE)
     files <- sort(files)
     
-    # Dates
+    
+    # Extraction date + conversion DOY
     extract_date <- function(x) {
-      m <- regexec("(\\d{4})_week(\\d+)_", basename(x))
-      r <- regmatches(basename(x), m)[[1]]
-      if(length(r) == 3) return(paste0("Semaine ", r[3], " - ", r[2]))
+      fname <- basename(x)
+      
+      m <- regexec(".*_(\\d{4})_doy(\\d+)_HH([0-9]+-[0-9]+)", fname)
+      r <- regmatches(fname, m)[[1]]
+      
+      if (length(r) == 4) {
+        year <- as.numeric(r[2])
+        doy  <- as.numeric(r[3])
+        hh   <- r[4]
+        
+        # Conversion DOY -> date réelle
+        date_real <- as.Date(doy - 1, origin = paste0(year, "-01-01"))
+        
+        # Heures formatées
+        hh_fmt <- gsub("-", "–", hh)   # tiret long
+        
+        # Format ex : "Jeudi 9 janvier 2025 — 00h–03h"
+        txt <- paste0(
+          format(date_real, "%A %d %B %Y"),
+          " — ",
+          gsub("([0-9]+)", "\\1h", hh_fmt)
+        )
+        
+        # Mettre la 1ère lettre capitale
+        txt <- paste0(toupper(substr(txt,1,1)), substr(txt,2,nchar(txt)))
+        
+        return(txt)
+      }
+      
       return(NA)
     }
+    
+    # Toutes les dates converties
     dates <- sapply(files, extract_date)
     
-    # Cache pour images (optionnel)
+    
+    # Cache images magick
     img_cache <- list()
+    
     get_image <- function(i) {
-      if(!i %in% names(img_cache)) {
-        img_cache[[as.character(i)]] <<- image_read(files[i])
+      key <- as.character(i)
+      if (!key %in% names(img_cache)) {
+        img_cache[[key]] <<- image_read(files[i])
       }
-      return(img_cache[[as.character(i)]])
+      img_cache[[key]]
     }
     
+    
+    # Initialisation affichage
     output$date_start <- renderText({ dates[1] })
     output$date_end   <- renderText({ dates[length(dates)] })
     
-    updateSliderInput(session, "frame", min = 1, max = length(files), value = 1)
+    updateSliderInput(session, "frame",
+                      min = 1, max = length(files), value = 1)
     
+    
+    # Frame courante 
     current <- reactiveVal(1)
     
-    observeEvent(input$frame, { current(input$frame) })
+    observeEvent(input$frame, {
+      current(input$frame)
+    })
     
+    
+    # Image affichée 
     output$img_current <- renderImage({
+      
       tmpfile <- tempfile(fileext = ".png")
       image_write(get_image(current()), tmpfile)
-      list(src = tmpfile, contentType = "image/png", width = "100%", height = "auto")
+      
+      list(
+        src = tmpfile,
+        contentType = "image/png",
+        width = "100%",
+        height = "auto"
+      )
+      
     }, deleteFile = TRUE)
     
-    output$date_current <- renderText({ dates[current()] })
+    
+    # Date courante 
+    output$date_current <- renderText({
+      dates[current()]
+    })
+    
   })
 }
