@@ -126,6 +126,9 @@ ui <- fluidPage(
         tabPanel(
           "Résumé statistique",
           summaryUI("sum1")),
+        tabPanel(
+          "Analyse", 
+          analyseUI("analyse1")),
         
         tabPanel(
           "Vidéo",

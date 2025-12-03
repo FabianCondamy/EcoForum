@@ -8,7 +8,8 @@ library(tidyterra)
 library(lubridate)
 library(magick)
 library(shinycssloaders)
-
+library(tidyr)
+library(zoo)
 server <- function(input, output, session) {
 
   # On récupère les données chargées (c'est une reactive)
@@ -199,6 +200,6 @@ server <- function(input, output, session) {
   mapServer("map1", data = filtered_data, variable = reactive(input$variable), tiles = reactive(tiles))
   videoServer("player1")
   summaryServer("sum1",filtered_data = filtered_data,selected_variable = reactive(input$variable))
-  
+  analyseServer("analyse1", data = filtered_data)
   NewSectionServer("new_section")
 }
