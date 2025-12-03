@@ -29,7 +29,11 @@ EcoForum/
         ├── mod_data.R      # Gestion des données
         ├── mod_map.R       # Module : Cartographie interactive
         ├── mod_serietemp.R # Module : Séries temporelles
+        ├── mod_analyse.R     # Module : Décomposition d'une série temporelle
         ├── mod_stats.R     # Module : Statistiques (Boxplots)
+        ├── mod_video.R     # Module : Vidéo
+        ├── mod_stats.R     # Module : Statistiques (Boxplots)
+        ├── mod_newsection.R    # Module : Nouvelle section
         └── mod_summary.R   # Module : Tableau récapitulatif
 ```
 ---
