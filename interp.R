@@ -1,39 +1,5 @@
 librarian::shelf(shiny, ggplot2, dplyr, sf, maptiles, raster, tidyterra, ggspatial, lubridate, tidyr,here,gstat,sp,automap,stars)
 
-# Chargement des données
-ref <- read.csv("ecoforum-2/data/raw-data/temp_ref.csv", h = TRUE, sep = ",") %>%
-  group_by(X_date) %>%
-  summarise(temp.ref = mean(outside_temp)) %>%
-  mutate(date = ymd(X_date),
-         YYYY = year(date),
-         MM = month(date),
-         DD = day(date)) %>%
-  dplyr::select(-X_date)
-
-temp <- read.csv("ecoforum-2/data/derived-data/250703_corr.csv", h = TRUE, sep = ";") %>%
-  separate(coord, sep = ",", into = c("Longitude", "Latitude"))
-
-habitat <- read.csv("ecoforum-2/data/raw-data/habitat.csv", h = TRUE, sep = ";") %>%
-  rename(sensor = id) %>%
-  dplyr::select(sensor, type.zone)
-
-# Transformation spatiale et enrichissement
-temp <- st_as_sf(temp, coords = c("Latitude", "Longitude"), crs = 4326) %>%
-  st_transform("EPSG:2154") %>%
-  mutate(date.time = ymd_hms(date.time),
-         YYYY = year(date.time),
-         MM = month(date.time),
-         DD = day(date.time),
-         HH = hour(date.time),
-         Min = minute(date.time),
-         SS = second(date.time),
-         doy = yday(make_date(YYYY, MM, DD))) %>%
-  left_join(habitat, by = "sensor") %>%
-  left_join(ref, by = c("YYYY", "MM", "DD")) %>%
-  mutate(temp.ecart.raw = temp.corr - temp.ref,
-         temp.ecart.prc = (temp.corr - temp.ref) / temp.ref)
-
-temp$month_name <- factor(month.name[temp$MM], levels = month.name)
 
 batiments <- st_read("batiments/batiments.geojson")
 batiments=st_transform(batiments,3857)
@@ -70,6 +36,7 @@ interpolation=function(Y,min_doy,max_doy,min_HH,max_HH,contours=FALSE){
   # Variogramme
   v=variogram(temperature~1,df)
   v_mod_ok <- fit.variogram(v, model=vgm(model="Sph"))
+  print(plot(v))
   print(plot(v,v_mod_ok))
 
   g=gstat(formula=temperature~1,model=v_mod_ok,data=df)
@@ -126,11 +93,13 @@ interpolation=function(Y,min_doy,max_doy,min_HH,max_HH,contours=FALSE){
     coord_sf(
       xlim=c(interp_bbox["xmin"],interp_bbox["xmax"]),
       ylim=c(interp_bbox["ymin"],interp_bbox["ymax"])
-    )
+    )+
+    theme(legend.position = "none")
   
-  chemin="data_images"
-  nom_fichier=sprintf("%s/interpolation_%d_doy%d_HH%d-%d.png",chemin,Y,min_doy,min_HH,max_HH)
-  ggsave(nom_fichier,p,width=10,height=8,dpi=300)
+  
+  #chemin="data_images"
+  #nom_fichier=sprintf("%s/interpolation_%d_doy%d_HH%d-%d.png",chemin,Y,min_doy,min_HH,max_HH)
+  #ggsave(nom_fichier,p,width=10,height=8,dpi=300)
   
   return(p)
 }
@@ -140,105 +109,19 @@ interpolation=function(Y,min_doy,max_doy,min_HH,max_HH,contours=FALSE){
 ## Fonction pour créer les cartes dans un dossier cartes_interpolees ##
 ## chaque carte représente une interpolation de la température moyenne de chaque capteur dans un intervalle de 4h ##
 ## Pour que la fonction enregistre ces cartes, il faut enlever les 3 derniers commentaires de la fonction interpolation ##
-
-if (!dir.exists("data/images")) {
-  dir.create("data/images")
-}
-
-for (i in 2024:2025){
-  for (j in 1:366){
-    for (z in 1:6)
-      if (file.exists(sprintf("%s/interpolation_%d_doy%d_HH%d-%d.png","data/images",i,j,4*(z-1),4*z-1))){
+verif=function(){
+  if (!dir.exists("data/images")) {
+    dir.create("data/images")
+  }
+  
+  for (i in 2024:2025){
+    for (j in 1:366){
+      for (z in 1:6)
+        if (file.exists(sprintf("%s/interpolation_%d_doy%d_HH%d-%d.png","data/images",i,j,4*(z-1),4*z-1))){
+        }
+      else {
+        interpolation(i,j,j,4*(z-1),4*z-1)
       }
-    else {
-      interpolation(i,j,j,4*(z-1),4*z-1)
     }
   }
 }
-
-
-ui <- fluidPage(
-  titlePanel("Analyse des Températures par Zone"),
-  
-  sidebarLayout(
-    sidebarPanel(
-      width = 3,
-      radioButtons("year_select", "Année :", choices = sort(unique(temp$YYYY)), selected = 2024),
-      
-      sliderInput("week_range", "Semaine de l'année :", 
-                  min = 1, max = 53,
-                  value = 23, step = 1),
-      
-      sliderInput("hour_range", "Heure(s) de la journée :", 
-                  min = 0, max = 23, value = 16, step = 1),
-      
-      actionButton("update", "Mettre à jour")
-    ),
-    
-    mainPanel(
-      tabsetPanel(
-        tabPanel("Température vs DOY", plotOutput("tempPlot")),
-        tabPanel("Boxplots", plotOutput("boxplotTemp")),
-        tabPanel("Carte des zones", imageOutput("mapPlot")),
-        tabPanel("Résumé statistique", tableOutput("summaryTable"))
-      )
-    )
-  )
-)
-
-# Serveur
-server <- function(input, output, session) {
-
-  p <- reactive({
-    interpolation(input$year_select,input$doy_range,input$doy_range,input$hour_range,input$hour_range)
-  })
-  
-  # Température vs DOY
-  output$tempPlot <- renderPlot({
-    p
-  })
-  
-  # Boxplots sensor × year
-  output$boxplotTemp <- renderPlot({
-    ggplot(filtered_data(), aes(x = as.factor(YYYY), y = .data[[input$variable]],
-                                fill = as.factor(YYYY))) +
-      geom_boxplot(alpha = 0.7) +
-      labs(title = paste("Boxplot de", input$variable),
-           x = "Année", y = input$variable) +
-      facet_wrap(~ sensor) +
-      theme_minimal()
-  })
-  
-  # Carte
-  output$mapPlot <- renderImage({
-    list(
-      src = sprintf("%s/interpolation_%s_week%s.png",chemin,input$year_select,input$week_range),
-      contentType = "image/png",
-      width=750,
-      height=600,
-      alt = "Mon image PNG"
-    )
-  }, deleteFile = FALSE)
-
-  # Résumé statistique : sensor × year
-  output$summaryTable <- renderTable({
-    df <- filtered_data()
-    var <- input$variable
-    
-    df %>%
-      st_drop_geometry() %>%
-      group_by(sensor, YYYY) %>%
-      summarise(
-        Moyenne = mean(.data[[var]], na.rm = TRUE),
-        Écart_type = sd(.data[[var]], na.rm = TRUE),
-        Min = min(.data[[var]], na.rm = TRUE),
-        Max = max(.data[[var]], na.rm = TRUE),
-        N = n(),
-        .groups = "drop"
-      ) %>%
-      arrange(sensor, YYYY)
-  }, digits = 2)
-}
-
-# Lancer l'application
-shinyApp(ui = ui, server = server)
