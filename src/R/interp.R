@@ -36,8 +36,8 @@ interpolation=function(Y,min_doy,max_doy,min_HH,max_HH,contours=FALSE){
   # Variogramme
   v=variogram(temperature~1,df)
   v_mod_ok <- fit.variogram(v, model=vgm(model="Sph"))
-  print(plot(v))
-  print(plot(v,v_mod_ok))
+  #print(plot(v))
+  #print(plot(v,v_mod_ok))
 
   g=gstat(formula=temperature~1,model=v_mod_ok,data=df)
   z=predict(g,newdata=grid)
@@ -97,11 +97,11 @@ interpolation=function(Y,min_doy,max_doy,min_HH,max_HH,contours=FALSE){
     theme(legend.position = "none")
   
   
-  #chemin="data_images"
-  #nom_fichier=sprintf("%s/interpolation_%d_doy%d_HH%d-%d.png",chemin,Y,min_doy,min_HH,max_HH)
-  #ggsave(nom_fichier,p,width=10,height=8,dpi=300)
+  chemin="data_images"
+  nom_fichier=sprintf("%s/interpolation_%d_doy%d_HH%d-%d.png",chemin,Y,min_doy,min_HH,max_HH)
+  ggsave(nom_fichier,p,width=10,height=8,dpi=300)
   
-  return(p)
+  #return(p)
 }
 
 
