@@ -1,0 +1,10 @@
+name: shiny_app
+title: shiny_app
+username: ecoforum
+account: ecoforum
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 14254707
+bundleId: 9949690
+url: https://ecoforum.shinyapps.io/shiny_app/
+version: 1
