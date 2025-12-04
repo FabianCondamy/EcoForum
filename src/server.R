@@ -10,6 +10,12 @@ library(magick)
 library(shinycssloaders)
 library(tidyr)
 library(zoo)
+library(raster)
+library(gstat)
+library(sp)
+library(automap)
+library(stars)
+
 server <- function(input, output, session) {
 
   # On récupère les données chargées (c'est une reactive)

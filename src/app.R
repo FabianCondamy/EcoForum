@@ -1,7 +1,9 @@
 library(shiny)
 
 # Modules
+source("global.R")
 source("R/mod_data.R")
+source("R/interp.R")
 source("R/mod_serietemp.R")
 source("R/mod_map.R")
 source("R/mod_stats.R")
@@ -9,6 +11,7 @@ source("R/mod_summary.R")
 source("R/mod_video.R")
 source("R/mod_newsection.R")
 source("R/mod_analyse.R")
+
 # UI et server
 source("ui.R")
 source("server.R")
