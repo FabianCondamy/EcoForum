@@ -1,7 +1,7 @@
 librarian::shelf(shiny, ggplot2, dplyr, sf, maptiles, raster, tidyterra, ggspatial, lubridate, tidyr,here,gstat,sp,automap,stars)
 
 
-batiments <- st_read("batiments/batiments.geojson")
+batiments <- st_read("../../batiments/batiments.geojson")
 batiments=st_transform(batiments,3857)
 
 
