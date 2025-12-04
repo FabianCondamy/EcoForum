@@ -120,10 +120,6 @@ ui <- fluidPage(
           statsUI("stat1")),
         
         tabPanel(
-          "Carte des zones",
-          mapUI("map1")),
-        
-        tabPanel(
           "Résumé statistique",
           summaryUI("sum1")),
         tabPanel(
@@ -131,8 +127,8 @@ ui <- fluidPage(
           analyseUI("analyse1")),
         
         tabPanel(
-          "Vidéo",
-          videoUI("player1")),
+          "Cartes",
+          mapUI("map1")),
         
         tabPanel(
           "Section vierge",
