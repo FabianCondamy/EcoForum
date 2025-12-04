@@ -24,7 +24,7 @@ interpolation=function(Y,min_doy,max_doy,min_HH,max_HH,contours=FALSE){
   
   df = st_transform(df, 2154)
   df=df %>% dplyr::select(temperature,geometry)
-  df=df %>%
+  df_reduce=df %>%
     group_by(geometry) %>%
     summarise(temperature=mean(temperature))
   
@@ -39,7 +39,7 @@ interpolation=function(Y,min_doy,max_doy,min_HH,max_HH,contours=FALSE){
   #print(plot(v))
   #print(plot(v,v_mod_ok))
 
-  g=gstat(formula=temperature~1,model=v_mod_ok,data=df)
+  g=gstat(formula=temperature~1,model=v_mod_ok,data=df_reduce)
   z=predict(g,newdata=grid)
   
   #rmse=sqrt(mean((df$temperature-z$var1.pred)^2))
@@ -105,12 +105,12 @@ interpolation=function(Y,min_doy,max_doy,min_HH,max_HH,contours=FALSE){
 
 
 
-## Fonction pour créer les cartes dans un dossier cartes_interpolees ##
+## Fonction pour créer les cartes dans un dossier data/images ##
 ## chaque carte représente une interpolation de la température moyenne de chaque capteur dans un intervalle de 4h ##
-## Pour que la fonction enregistre ces cartes, il faut enlever les 3 derniers commentaires de la fonction interpolation ##
+
 verif=function(){
   if (!dir.exists("../data/images")) {
-    dir.create("data/images")
+    dir.create("../data/images")
   }
   
   for (i in 2024:2025){
