@@ -110,14 +110,14 @@ interpolation=function(Y,min_doy,max_doy,min_HH,max_HH,contours=FALSE){
 ## chaque carte représente une interpolation de la température moyenne de chaque capteur dans un intervalle de 4h ##
 ## Pour que la fonction enregistre ces cartes, il faut enlever les 3 derniers commentaires de la fonction interpolation ##
 verif=function(){
-  if (!dir.exists("data/images")) {
+  if (!dir.exists("../data/images")) {
     dir.create("data/images")
   }
   
   for (i in 2024:2025){
     for (j in 1:366){
       for (z in 1:6)
-        if (file.exists(sprintf("%s/interpolation_%d_doy%d_HH%d-%d.png","data/images",i,j,4*(z-1),4*z-1))){
+        if (file.exists(sprintf("%s/interpolation_%d_doy%d_HH%d-%d.png","../data/images",i,j,4*(z-1),4*z-1))){
         }
       else {
         interpolation(i,j,j,4*(z-1),4*z-1)
