@@ -8,7 +8,7 @@ library(stringr)
 ecoforum_data <- function(
     path_ref = "../data/raw-data/temp_ref.csv",
     path_habitat = "../data/raw-data/habitat.csv",
-    path_temp = "../data/derived-data/250703_corr.csv",
+    path_temp = "../data/derived-data/new-data_corr.csv",
     path_capteur = "../data/new-csv/data_one_sensor.csv"
 ) {
   
