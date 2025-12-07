@@ -10,6 +10,8 @@ library(magick)
 library(shinycssloaders)
 library(tidyr)
 library(zoo)
+library(data.table)
+
 server <- function(input, output, session) {
 
   # On récupère les données chargées (c'est une reactive)
