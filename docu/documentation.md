@@ -1,7 +1,6 @@
 ---
 title: "Documentation du projet EcoForum"
-author: "Anne-Laure"
-date: 25/11/2025
+date: 06/12/2025
 format: html
 ---
 
@@ -17,30 +16,31 @@ L'application est structurée autour d'un fichier **app.R** composé d'une inter
 
 ```src/
 .
-├── R/                      # Dossier des différents modules Shiny
-│   ├── data_prep.R         # Préparation des données
-│   ├── mod_serietemp.R     # Module des séries temporelles
-│   ├── mod_map.R           # Module des cartes spatiales
-│   ├── mod_stats.R         # Module des statistiques générales et des boxplots
-│   ├── mod_summary.R       # Module du résumé statistique
-│   └── mod_newsection.R    # Module vierge pour futures fonctionnalités
-├── rsconnect/...           # Fichiers de déploiement ShinyApps.io
-├── www/                    # Dossier des ressources web
-│    └── style.css          # Feuille de style CSS personnalisée
-├── app.R                   # Fichier principal de l'application
-├── global.R                # Fichier global pour l'application
-├── server.R                # Fichier serveur de l'application (back)
-└── ui.R                    # Fichier UI de l'application (front)
+├── R/                                              # dossier des différents modules Shiny
+|   ├── mod_analyse.R       
+│   ├── mod_data.R                                  # préparation des données
+│   ├── mod_serietemp.R                             # module des séries temporelles
+│   ├── mod_map.R                                   # module des cartes spatiales
+│   ├── mod_stats.R                                 # module des statistiques générales et des boxplots
+│   ├── mod_summary.R                               # module du résumé statistique
+│   └── mod_newsection.R                            # module vierge pour futures fonctionnalités
+├── rsconnect/shinyapps.io/ecoforum/shiny_app.dcf   # fichiers de déploiement ShinyApps.io
+├── www/                                            # dossier des ressources web
+│    └── style.css                                  # feuille de style CSS personnalisée
+├── app.R                                           # fichier principal de l'application
+├── global.R                                        # fichier global pour l'application
+├── server.R                                        # fichier serveur de l'application (back)
+└── ui.R                                            # fichier UI de l'application (front)
 ```
 
-# 3. Contenu du fichier `app.R`
+# 3. Contenu plus détaillé de l'application
 
 ## 3.1 Interface utilisateur (`ui.R`)
 
 L'interface contient :
 
 * **sidebarPanel** :
-  - Sélecteur de variable (`temp.corr`, `temp.ecart.prc`, `temp.ecart.raw`)  
+  - Sélecteur parmi 3 variables : `temp.corr`, `temp.ecart.prc` et `temp.ecart.raw`  
   - Sélecteur d'années  
   - Slider DOY avec conversion en dates  
   - Slider d'heures  
@@ -56,37 +56,39 @@ L'interface contient :
 
 ## 3.2 Serveur (`server.R`)
 
-- Gestion des capteurs et DOY  
-- Filtrage des données dans `filtered_data()`  
-- Export CSV avec coordonnées géographiques  
-- Activation des modules : `timeseriesServer()`, `statsServer()`, `mapServer()`, `summaryServer()`, `NewSectionServer()`
+Ce fichier constitue le back de l'application, il réalise :
+
+- la gestion des capteurs et DOY  
+- le filtrage des données dans `filtered_data()`  
+- l'export CSV avec coordonnées géographiques  
+- l'activation des différents modules : `timeseriesServer()`, `statsServer()`, `mapServer()`, `summaryServer()`, `analyseServer()`, `NewSectionServer()`
 
 # 3.3 Contenu du fichier `global.R`
 
-- Palette Okabe–Ito pour visualisations  
+- Palette de couleurs Okabe–Ito pour visualisations  
 - Import des modules via `source()`  
 
 
 ---
 
-# 5. Feuille de style `style.css`
+# 3.4 Feuille de style `style.css`
 
-Personnalisation des onglets, panels, boutons et balises `<details>`.
+Ce fichier permet la personnalisation des onglets, panels, boutons et balises `<details>`.
 
-# 6. Différents modules de l'application Shiny
+# 4. Différents modules de l'application Shiny
 
 Tous les codes des divers modules sont organisés de la même manière avec une partie dediée au back de l'application (partie server) et une partie dediée au front (partie UI).
 
-## 6.1 `mod_analyse.R`
+## 4.1 `mod_analyse.R`
 
-Ce premier module permet :
+Ce premier module se concentre sur l'affichage d'une série temporelle, il permet :
 
 - de construire une série temporelle complète en agrégeant les données par heure en faisant une décomposition additive classique (fonction decompose)
 - de régler le cycle temporel sur lequel on veut tracer (journalier, hebdomadaire ou mensuel)
 - d'afficher quatre graphiques : les données brutes, la tendance, la saisonnalité et les résidus
 
 
-## 6.2 `mod_data.R`
+## 4.2 `mod_data.R`
 
 Ce module est dédié à la préparation des données, il effectue :
 
@@ -95,7 +97,7 @@ Ce module est dédié à la préparation des données, il effectue :
 - la génération d'une carte de fond avec OpenStreetMap lorsque les données sont disponibles
 
 
-## 6.3 `mod_map.R`
+## 4.3 `mod_map.R`
 
 Ce module génère une série de cartes générées à partir de l'ensemble des capteurs. Plus précisément, il réalise :
 
@@ -104,7 +106,7 @@ Ce module génère une série de cartes générées à partir de l'ensemble des 
 - la conversion de la DOY en date réelle
 - l'affichage d'une image légendée avec un slider permettant de sélectionner la date voulue
 
-## 6.4 `mod_newsection.R`
+## 4.4 `mod_newsection.R`
 
 Ce module fournit une page vide dans l'application prête à être complétée pour accueillir de nouvelles features. Il effectue :
 
@@ -112,7 +114,7 @@ Ce module fournit une page vide dans l'application prête à être complétée p
 - la génération d'un panneau d'explication 
 - la génération d'une structure UI minimale servant de base à une future page
 
-## 6.5 `mod_serietemp.R`
+## 4.5 `mod_serietemp.R`
 
 Ce module permet d'afficher l'évolution temporelle de la variable choisie parmi 3 options avec un choix des capteurs et un code couleur pour chacune des années. Plus en détail, il dispose de :
 
@@ -120,7 +122,7 @@ Ce module permet d'afficher l'évolution temporelle de la variable choisie parmi
 - l'affichage d'un spinner animé pendant le rendu
 - l'affichage d'une section repliable d'explications sur les données
 
-## 6.6 `mod_stats.R`
+## 4.6 `mod_stats.R`
 
 Ce module gère l'affichage et le calcul des boxplots qui permettent de comparer la distribution d'une variable selon l'année et le capteur.
 
@@ -128,7 +130,7 @@ Ce module gère l'affichage et le calcul des boxplots qui permettent de comparer
 - gestion des valeurs aberrantes
 - section repliable d'explications sur les données
 
-## 6.7 `mod_summary.R`
+## 4.7 `mod_summary.R`
 
 Ce module Shiny affiche un ensemble de statistiques descriptives par capteur, ainsi que deux visualisations dédiées au capteur sélectionné. Il permet :
 
@@ -138,12 +140,12 @@ Ce module Shiny affiche un ensemble de statistiques descriptives par capteur, ai
 - l'affichage d'une section repliable d'explications sur les données
 
 
-## 6.8 `compilation-calibration-data.R`
+## 4.8 `compilation-calibration-data.R`
 
 
 
 
-# 7. Structure générale du dossier data
+# 5. Structure générale du dossier data
 
 Le dossier data à vocation d'accueillir l'ensemble des fichiers de données utilisés ensuite dans les codes du dossier src qui construisent l'application.
 
@@ -153,22 +155,22 @@ Le dossier data à vocation d'accueillir l'ensemble des fichiers de données uti
 │   ├── 250703.csv                  # 
 │   ├── 250703_corr.csv             #
 │   ├── correction.csv              #
-│   └── data.calibr.csv             #
-├── raw-data/                       #     
+│   └── data.calibr.csv             # jeu de données de calibration des capteurs
+├── raw-data/                       # fichiers de données brutes    
 │   ├── 250703/                     # données brutes récoltées sur les capteurs 
 │       ├── (n°02)                  # fichier de données du premier capteur (n°2)
 │       ├──  ...                    # fichiers de données des autres capteurs
 │       └── (n°38)                  # fichier de données du dernier capteur (n°38) 
 │   ├── new-csv/                    # dossier vide dédié à l'accueil de nouvelles données
 │   ├── data.terrain.corrige.csv    # 
-│   ├── habitat.csv                 #
-│   ├── listing-HOBO.xlsx           #
-│   ├── map.osm                     #
-│   └── temp_ref.csv                #
+│   ├── habitat.csv                 # jeu de données rendant compte du type d'habitat dans lequel les capteurs sont positionnés 
+│   ├── listing-HOBO.xlsx           # jeu de données contenant les informations sur les capteurs (coordonnées, modèle, numéro de série)
+│   ├── map.osm                     # carte openstreetmap
+│   └── temp_ref.csv                # jeu de données contenant les températures de référence sur le campus prises toutes les demi-heures
 ```
 
 
-# 8. Structure générale du dossier docu
+# 6. Structure générale du dossier docu
 
 Ce dossier contient l'ensemble des notices qui permettent de comprendre le projet et ses différents codes.
 
@@ -176,46 +178,53 @@ Ce dossier contient l'ensemble des notices qui permettent de comprendre le proje
 .
 ├── figures/                                  #
 │   ├── fig-calibration/                      # dossier contenant diverses images concernant la calibration des capteurs
-│       ├── data.calib.corr.png               #
-│       ├── data.calib.moy.png                #
-│       └── data.calib.png                    #   
+│       ├── data.calib.corr.png               # graphique rendant compte des températures mesurées en continu par chaque capteur dans l’étuve lors de la calibration
+│       ├── data.calib.moy.png                # graphique rendant compte des températures moyennes mesurées par chaque capteur dans l’étuve lors de la calibration
+│       └── data.calib.png                    # zoom du premier graphique
 │   └── sensor_map                            #
-├── notices/                                  #
-│   ├── Notice_utilisation_HOBO-MX2203.docx   #
-│   └── Notice-analyse-donnees-HAV454H.docx   #
-├── documentation.md                          #
-├── Lien vers map capteurs.docx               #
-└── Plan-capteur-HOBO.pdf                     #
+├── notices/                                  
+│   ├── Notice_utilisation_HOBO-MX2203.docx   # notice décrivant l'utilisation de l'application HOBO-connect qui permet de relever les données sur les capteurs sur le terrain
+│   └── Notice-analyse-donnees-HAV454H.docx   # notice concernant le travail du groupe précédent
+├── documentation.md                          # ensemble de la documentation
+├── Lien vers map capteurs.docx               # fichier docx renvoyant à la carte des capteurs sur le campus
+└── Plan-capteur-HOBO.pdf                     # fichier pdf rendant compte de l'emplacement des capteurs
 ```
 
-# 9. Packages R requis pour le projet
+# 7. Packages R requis pour le projet
 
 Avant de lancer l'application, assurez-vous que les packages suivants sont installés :
 
-| Package       | Utilisation principale                                   |
-|---------------|--------------------------------------------------------- |
-| shiny         | Interface web et serveur Shiny                           |
-| ggplot2       | Visualisations graphiques                                |
-| dplyr         | Manipulation et transformation de données                |
-| sf            | Gestion des données spatiales                            |
-| viridis       | Palettes de couleurs pour les graphiques                 |
-| lubridate     | Gestion des dates et conversion DOY → Date               |
-| readr         | Lecture de fichiers CSV                                  |
-| shinyWidgets  | Composants UI avancés (sliders, boutons, selectizeInput) |
-| shinycssloaders | Spinners pour les graphiques et modules                |
-| maptiles      | Fond de carte pour visualisations spatiales              |
+| Package         | Utilisation principale                                                           |
+|-----------------|----------------------------------------------------------------------------------|
+| shiny           | Création d'applications web interactives en R avec back et front                 |
+| ggplot2         | Création de visualisations graphiques claires et personnalisables                |
+| dplyr           | Manipulation et transformation de données                                        |
+| tidyr           | Mise en forme des données                                                        |
+| tidyterra       | Rendre les objets spatiaux manipulables avec dplyr et visualisables avec ggplot2 |
+| readxl          | Importation de fichiers .xls et .xlsx                                            |
+| readr           | Lecture de fichiers .csv                                                         |
+| sf              | Gestion des données spatiales                                                    |
+| viridis         | Utilisation de palettes de couleurs pour les graphiques                          |
+| lubridate       | Gestion des dates et conversion DOY en Date                                      |
+| stringr         | Manipulation des chaînes de caractères (str)                                     |
+| ggspatial       | Ajout d'éléments cartographiques aux cartes réalisées avec ggplot2               |  
+| shinyWidgets    | Enrichissement de l'UI Shiny avec widgets plus esthétiques et interactifs        |
+| shinycssloaders | Ajout d'animations de chargement (spinners) sur les graphiques                   |
+| maptiles        | Téléchargement et affichage de fond de carte pour visualisations spatiales       |
+| magick          | Import et manipulation d'images dans R                                           |
+| zoo             | Manipulation des séries temporelles                                              |
 
 **Pour installer tous les packages en une fois :**
 
 ```r
-required_packages <- c("shiny", "ggplot2", "dplyr", "sf", "viridis",
-                       "lubridate", "readr", "shinyWidgets", "shinycssloaders", "maptiles")
+required_packages <- c("shiny", "ggplot2", "dplyr", "tidyr", "tidyterra", "readr", "readxl", "sf", "viridis",
+                       "lubridate", "stringr", "ggspatial", "shinyWidgets", "shinycssloaders", "maptiles", "magick", "zoo")
 new_packages <- required_packages[!(required_packages %in% installed.packages()[,"Package"])]
 if(length(new_packages)) install.packages(new_packages)
 ```
 
 
-# 10. Lancer l'application Shiny
+# 8. Lancer l'application Shiny
 
 Directement via R :
 
@@ -230,19 +239,19 @@ shiny::runApp()
 Ou avec le bouton "Run App" dans RStudio (toujours dans le fichier app.R).
 
 
-# 11. Notice concernant l'ajout de nouvelles données 
+# 9. Notice concernant l'ajout de nouvelles données 
 
 Pour ajouter de nouvelles données et continuer d'utiliser l'application :
 
 1) Commencer par prélever les données des différents capteurs sur le terrain en se référant au fichier Notice_utilisation_HOBO-MX2203.docx disponible dans le sous-dossier notices de docu
 2) Déposer les fichiers de données des différents capteurs en suivant le chemin suivant : data\raw-data\new-csv\
 3) Lancer le fichier compilation-calibration-data.R disponible dans le dossier src
-4) Suivre les étapes du point précédent
+4) Suivre les étapes du point précédent pour lancer l'application avec les nouvelles données
 
 
-# 12. Fonctionnement général de l'application
+# 10. Fonctionnement général de l'application
 
 1. Choisir variable, années, capteurs, DOY, heures  
 2. Cliquer sur **Mettre à jour**  
-3. Modules génèrent graphiques et analyses sur les données filtrées  
+3. Générer graphiques et analyses sur les données filtrées en utilisant les différents modules 
 4. (Optionnel) Cliquer sur **Exporter filtres** pour sauvegarder les filtres sélectionnés et les réutiliser ultérieurement
