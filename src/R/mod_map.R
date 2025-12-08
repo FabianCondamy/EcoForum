@@ -1,19 +1,44 @@
 # Module UI
 mapUI <- function(id) {
   ns <- NS(id)
+  
   tagList(
     div(
-      style = "max-width:600px; margin:0 auto; text-align:center;",
+      style = "max-width:800px; margin:0 auto; text-align:center;",
       
       tags$h4(
         "Cartes générées à partir de tous les capteurs",
         style = "margin-bottom:20px; font-weight:600;"
       ),
       
-      shinycssloaders::withSpinner(
-        imageOutput(ns("img_current"), height = "500px"),
-        type = 4, color = "#56B4E9", size = 1.2
+      div(
+        style = "display:flex; gap:15px; align-items:flex-start; justify-content:center;",
+        
+        shinycssloaders::withSpinner(
+          imageOutput(ns("img_current"), height = "500px"),
+          type = 4, color = "#56B4E9", size = 1.2
+        ),
+        
+        div(
+          style = "
+            width:200px;
+            font-size:13px;
+            background:#f9f9f9;
+            padding:10px;
+            border-radius:6px;
+            text-align:left;
+            margin-top:160px;
+          ",
+          
+          tags$strong("Couleurs & températures"),
+          tags$p(
+            style = "margin-top:8px;",
+            "Les tons bleus représentent les zones les plus fraîches, tandis que les tons rouges indiquent les températures plus élevées."
+          )
+        )
       ),
+      
+      tags$br(),
       
       sliderInput(
         ns("frame"), "Image :",
@@ -33,11 +58,21 @@ mapUI <- function(id) {
     
     tags$details(
       tags$summary("Explications (cliquer pour dérouler)"),
-      tags$p("Dans cet onglet, vous pouvez explorer l’évolution des températures moyennes sur le campus de la faculté des sciences. Les cartes présentées sont obtenues à partir d’une interpolation spatiale, réalisée à l’aide de la méthode du krigeage ordinaire, qui permet d’estimer la température entre les points de mesure. Ces cartes illustrent la répartition spatiale de la température pour des intervalles de 4 heures tout au long de la journée.
-             À l’aide du curseur, vous pouvez faire défiler les cartes dans l’ordre chronologique. Pour chaque carte affichée, la date et la plage horaire correspondantes s’affichent automatiquement. L’échelle de température est ajustée chaque jour afin de faciliter la lecture et la comparaison des cartes.")
+      tags$p(
+        "Dans cet onglet, vous pouvez explorer l’évolution des températures moyennes sur le campus de la faculté des sciences. ",
+        "Les cartes présentées sont obtenues à partir d’une interpolation spatiale, réalisée à l’aide de la méthode du krigeage ordinaire, ",
+        "qui permet d’estimer la température entre les points de mesure."
+      ),
+      tags$p(
+        "Ces cartes illustrent la répartition spatiale de la température pour des intervalles de 4 heures tout au long de la journée. ",
+        "À l’aide du curseur, vous pouvez faire défiler les cartes dans l’ordre chronologique. ",
+        "Pour chaque carte affichée, la date et la plage horaire correspondantes s’affichent automatiquement. ",
+        "L’échelle de température est ajustée chaque jour afin de faciliter la lecture et la comparaison des cartes."
+      )
     )
   )
 }
+
 
 # Module server
 mapServer <- function(id) {
