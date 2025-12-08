@@ -1,6 +1,7 @@
 library(shiny)
 
 # Modules
+source("global.R")
 source("R/mod_data.R")
 source("R/mod_serietemp.R")
 source("R/mod_map.R")

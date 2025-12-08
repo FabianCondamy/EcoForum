@@ -33,7 +33,8 @@ mapUI <- function(id) {
     
     tags$details(
       tags$summary("Explications (cliquer pour dérouler)"),
-      tags$p("...")
+      tags$p("Dans cet onglet, vous pouvez explorer l’évolution des températures moyennes sur le campus de la faculté des sciences. Les cartes présentées sont des interpolations qui permettent de visualiser la répartition spatiale de la température pour des intervalles de 4 heures tout au long de la journée.
+             À l’aide du curseur, vous pouvez faire défiler les cartes dans l’ordre chronologique. Pour chaque carte affichée, la date et la plage horaire correspondantes s’affichent automatiquement. L’échelle de température est ajustée chaque jour afin de faciliter la lecture et la comparaison des cartes")
     )
   )
 }
