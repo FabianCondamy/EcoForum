@@ -10,6 +10,8 @@ library(magick)
 library(shinycssloaders)
 library(tidyr)
 library(zoo)
+library(data.table)
+
 server <- function(input, output, session) {
 
   # On récupère les données chargées (c'est une reactive)
@@ -197,8 +199,7 @@ server <- function(input, output, session) {
   
   timeseriesServer("ts1", data = filtered_data, variable = reactive(input$variable))
   statsServer("stat1", data = filtered_data, variable = reactive(input$variable))
-  mapServer("map1", data = filtered_data, variable = reactive(input$variable), tiles = reactive(tiles))
-  videoServer("player1")
+  mapServer("map1")
   summaryServer("sum1",filtered_data = filtered_data,selected_variable = reactive(input$variable))
   analyseServer("analyse1", data = filtered_data)
   NewSectionServer("new_section")
