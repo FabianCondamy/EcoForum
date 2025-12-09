@@ -4,7 +4,7 @@ mapUI <- function(id) {
   
   tagList(
     div(
-      style = "max-width:800px; margin:0 auto; text-align:center;",
+      style = "max-width:750px; margin:0 auto; text-align:center;",
       
       tags$h4(
         "Cartes générées à partir de tous les capteurs",
