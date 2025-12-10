@@ -16,6 +16,8 @@ library(sp)
 library(automap)
 library(stars)
 library(data.table)
+library(readxl)
+library(stringr)
 
 server <- function(input, output, session) {
 

@@ -1,12 +1,3 @@
-library(dplyr)
-library(tidyr)
-library(lubridate)
-library(readxl)
-library(ggplot2)
-library(stringr)
-library(sf)
-library(maptiles)
-
 #  Ce fichier compile, calibre, corrige et prépare les données HOBO
 
 ecoforum_data <- function(
@@ -81,7 +72,7 @@ ecoforum_data <- function(
     
     correction <- mean_by_sensor %>%
       mutate(corr = global_mean - m) %>%
-      select(sensor, corr)
+      dplyr::select(sensor, corr)
     
     write.table(correction, path_export_corr, row.names = FALSE, sep = ";", dec = ".", col.names = TRUE)
     
@@ -131,7 +122,7 @@ ecoforum_data <- function(
       date = ymd(X_date),
       YYYY = year(date), MM = month(date), DD = day(date)
     ) %>%
-    select(-X_date)
+    dplyr::select(-X_date)
 
   # 3. Jointures et enrichissements
 

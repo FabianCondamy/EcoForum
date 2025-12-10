@@ -95,7 +95,7 @@ analyseServer <- function(id, data, variable_name = reactive("temp.corr")) {
       
       # Plot final
       ggplot(df_plot, aes(x = Date, y = Valeur, color = Composante)) +
-        geom_line(size = 0.6) +
+        geom_line(linewidth = 0.6) + #####
         facet_grid(Composante ~ ., scales = "free_y") +
         scale_color_manual(values = cols) +
         labs(

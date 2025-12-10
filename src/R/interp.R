@@ -1,5 +1,5 @@
-batiments <- st_read("C:/Users/lulud/Desktop/EcoForum/batiments/batiments.geojson")
-batiments=st_transform(batiments,3857)
+batiments <- sf::st_read("../batiments/batiments.geojson")
+batiments=sf::st_transform(batiments,3857)
 
 
 filtered_data=function(Y,min_doy,max_doy,min_HH,max_HH){
@@ -120,9 +120,4 @@ verif=function(){
       }
     }
   }
-}
-
-run.app=function(){
-  verif()
-  shinyApp(ui = ui, server = server)
 }
