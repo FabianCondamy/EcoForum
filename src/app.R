@@ -15,5 +15,4 @@ source("ui.R")
 source("server.R")
 
 # Lancer l'application
-verif()
 shinyApp(ui = ui, server = server)
