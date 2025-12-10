@@ -1,4 +1,4 @@
-batiments <- st_read("../batiments/batiments.geojson")
+batiments <- st_read("C:/Users/lulud/Desktop/EcoForum/batiments/batiments.geojson")
 batiments=st_transform(batiments,3857)
 
 
@@ -110,7 +110,7 @@ verif=function(){
     dir.create("../data/images")
   }
   
-  for (i in 2024:2025){
+  for (i in (min(temp$YYYY)):(max(temp$YYYY))){
     for (j in 1:366){
       for (z in 1:6)
         if (file.exists(sprintf("%s/interpolation_%d_doy%d_HH%d-%d.png","../data/images",i,j,4*(z-1),4*z-1))){
@@ -120,4 +120,9 @@ verif=function(){
       }
     }
   }
+}
+
+run.app=function(){
+  verif()
+  shinyApp(ui = ui, server = server)
 }
