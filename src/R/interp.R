@@ -1,6 +1,6 @@
 librarian::shelf(shiny, ggplot2, dplyr, sf, maptiles, raster, tidyterra, ggspatial, lubridate, tidyr,gstat,stars,readxl,stringr)
 
-ref <- read.csv("../data/raw-data/temp_ref.csv", h = TRUE, sep = ",") %>%
+ref <- read.csv("data/raw-data/temp_ref.csv", h = TRUE, sep = ",") %>%
   group_by(X_date) %>%
   summarise(temp.ref = mean(outside_temp)) %>%
   mutate(date = ymd(X_date),
@@ -9,10 +9,10 @@ ref <- read.csv("../data/raw-data/temp_ref.csv", h = TRUE, sep = ",") %>%
          DD = day(date)) %>%
   dplyr::select(-X_date)
 
-temp <- read.csv("../data/derived-data/new-data_corr.csv", h = TRUE, sep = ";") %>%
+temp <- read.csv("data/derived-data/new-data_corr.csv", h = TRUE, sep = ";") %>%
   separate(coord, sep = ",", into = c("Longitude", "Latitude"))
 
-habitat <- read.csv("../data/raw-data/habitat.csv", h = TRUE, sep = ";") %>%
+habitat <- read.csv("data/raw-data/habitat.csv", h = TRUE, sep = ";") %>%
   rename(sensor = id) %>%
   dplyr::select(sensor, type.zone)
 
@@ -34,7 +34,7 @@ temp <- st_as_sf(temp, coords = c("Latitude", "Longitude"), crs = 4326) %>%
 
 temp$month_name <- factor(month.name[temp$MM], levels = month.name)
 
-batiments <- sf::st_read("../batiments/batiments.geojson")
+batiments <- sf::st_read("batiments/batiments.geojson")
 batiments=sf::st_transform(batiments,3857)
 
 
@@ -57,7 +57,7 @@ interpolation=function(Y,min_doy,max_doy,min_HH,max_HH,contours=FALSE){
   
   df = st_transform(df, 2154)
   df=df %>% dplyr::select(temperature,geometry)
-  df_reduce=df %>%
+  df=df %>%
     group_by(geometry) %>%
     summarise(temperature=mean(temperature))
   
@@ -72,7 +72,7 @@ interpolation=function(Y,min_doy,max_doy,min_HH,max_HH,contours=FALSE){
   #print(plot(v))
   #print(plot(v,v_mod_ok))
 
-  g=gstat(formula=temperature~1,model=v_mod_ok,data=df_reduce)
+  g=gstat(formula=temperature~1,model=v_mod_ok,data=df)
   z=predict(g,newdata=grid)
   
   #rmse=sqrt(mean((df$temperature-z$var1.pred)^2))
@@ -129,7 +129,7 @@ interpolation=function(Y,min_doy,max_doy,min_HH,max_HH,contours=FALSE){
     )
   
   
-  chemin="../data/images"
+  chemin="data/images"
   nom_fichier=sprintf("%s/interpolation_%d_doy%d_HH%d-%d.png",chemin,Y,min_doy,min_HH,max_HH)
   ggsave(nom_fichier,p,width=10,height=8,dpi=300)
   
@@ -142,14 +142,14 @@ interpolation=function(Y,min_doy,max_doy,min_HH,max_HH,contours=FALSE){
 ## chaque carte représente une interpolation de la température moyenne de chaque capteur dans un intervalle de 4h ##
 
 verif=function(){
-  if (!dir.exists("../data/images")) {
-    dir.create("../data/images")
+  if (!dir.exists("data/images")) {
+    dir.create("data/images")
   }
   
   for (i in (min(temp$YYYY)):(max(temp$YYYY))){
     for (j in 1:366){
       for (z in 1:6)
-        if (file.exists(sprintf("%s/interpolation_%d_doy%d_HH%d-%d.png","../data/images",i,j,4*(z-1),4*z-1))){
+        if (file.exists(sprintf("%s/interpolation_%d_doy%d_HH%d-%d.png","data/images",i,j,4*(z-1),4*z-1))){
         }
       else {
         interpolation(i,j,j,4*(z-1),4*z-1)
