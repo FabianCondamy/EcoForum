@@ -10,36 +10,54 @@ Cette application Shiny permet d'analyser des données de température mesurées
 Le projet se structure de la manière suivante : 
 ```text
 EcoForum/
-├── data/                   # Données du projet
-│   ├── derived-data/       # Données recalibrées
-│   ├── images/             # Cartes générées 
-│   └── raw-data/           # Données brutes 
+├── batiments/                  # Contient les données géographiques des bâtiments et les scripts associés
+│   ├── Controle.R              # Script de contrôle/validation des données bâtiments      
+│   ├── batiments.geojson       # Géométrie finale utilisée pour l’interpolation (interp.R)
+│   ├── batiments_raw2.geojson  # Fichier brut avant nettoyage
+│   └── nettoyage_geoson.R      # Script de nettoyage et préparation du geojson
+├── data/                       # Données du projet
+│   ├── derived-data/           # Données recalibrées
+│   ├── images/                 # Cartes générées 
+│   └── raw-data/               # Données brutes 
 │
-├── docu/                   # Documentation et archives
-│   ├── analyses/           # Archives : anciens codes R
-│   ├── figures/            # Archives : fichiers images du calibrage des capteurs
-│   └── notices/            # Diverses notices sur l'utilisation de l'application et d'HOBO
+├── docu/                       # Documentation et archives
+│   ├── analyses/               # Archives : anciens codes R
+│   ├── figures/                # Archives : fichiers images du calibrage des capteurs
+│   └── notices/                # Diverses notices sur l'utilisation de l'application et d'HOBO
 │
-└── src/                      # Code source de l'application
-    ├── app.R                 # Lanceur de l'application
-    ├── server.R              # Logique serveur (back-end)
-    ├── ui.R                  # Interface utilisateur (front-end)
-    └── R/                    # Modules et fonctions (chargés automatiquement)
-        ├── mod_data.R        # Gestion des données
-        ├── mod_map.R         # Module : cartographie interactive
-        ├── mod_serietemp.R   # Module : séries temporelles
-        ├── mod_analyse.R     # Module : décomposition d'une série temporelle
-        ├── mod_stats.R       # Module : statistiques (Boxplots)
-        ├── mod_video.R       # Module : vidéo
-        ├── mod_stats.R       # Module : statistiques (Boxplots)
-        ├── mod_newsection.R  # Module : nouvelle section
-        └── mod_summary.R     # Module : tableau récapitulatif
+└── src/                        # Code source de l'application
+    ├── app.R                   # Lanceur de l'application
+    ├── server.R                # Logique serveur (back-end)
+    ├── global.R                # Palette Okabe–Ito (daltoniens)
+    ├── ui.R                    # Interface utilisateur (front-end)
+    └── R/                      # Modules et fonctions (chargés automatiquement)
+        ├── interp.R            # Script de génération automatique des cartes interpolées
+        ├── mod_analyse.R       # Module : décomposition d'une série temporelle
+        ├── mod_data.R          # Gestion des données
+        ├── mod_map.R           # Module : cartes interpolées
+        ├── mod_newsection.R    # Module : nouvelle section
+        ├── mod_serietemp.R     # Module : séries temporelles
+        ├── mod_stats.R         # Module : statistiques (Boxplots)
+        └── mod_summary.R       # Module : tableau récapitulatif
 ```
 ---
+## Préparation des données : génération des cartes 
+
+Avant de lancer l'application Shiny, il est indispensable d'exécuter le script `interp.R` (dans src/R/).
+Ce script génère l'ensemble des cartes interpolées nécessaires au fonctionnement de la section cartographique.
+Les cartes seront automatiquement enregistrées dans data/images/.
+
+**Durée d'exécution :** 
+
+Avec les données actuelles, le script met environ 2 heures à s'exécuter. Si davantage de données sont ajoutées dans le futur, le temps d'exécution augmentera proportionnellement.
+
+Pour lancer ce script, ouvrir `interp.R` dans RStudio et exécuter l'intégralité du fichier.
 
 ## Installation et Lancement
 
 Comme indiqué avant, les données doivent être présentes dans le dossier data/ à la racine du projet.
+
+Une fois le script `interp.R` exécuté et les cartes générées, vous pouvez lancer l'application.
 
 **Comment lancer l'application ?**
 
