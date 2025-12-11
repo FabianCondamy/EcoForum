@@ -74,4 +74,12 @@ shiny::runApp("src")
 
 Note technique : Les fichiers dans `src/R/` sont chargés automatiquement par Shiny au lancement, il n'est donc pas nécessaire de les sourcer manuellement (source()) dans `app.R`.
 
+## Ajout de nouvelles données
+
+Pour ajouter de nouvelles données et continuer d'utiliser l'application :
+
+1. Commencer par prélever les données des différents capteurs sur le terrain en se référant au fichier Notice_utilisation_HOBO-MX2203.docx disponible dans le sous-dossier notices de docu 
+2. Déposer les fichiers de données des différents capteurs en suivant le chemin suivant : data\raw-data\new-data\ 
+3. Nommer correctement les fichiers, ils doivent commencer par (n°XX) où XX est le numéro du capteur
+
 Pour plus d'informations, une documentation plus détaillée est disponible dans le dossier docu. (fichier `documentation.md`)
