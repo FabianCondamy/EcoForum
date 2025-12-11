@@ -56,4 +56,4 @@ shiny::runApp("src")
 
 Note technique : Les fichiers dans `src/R/` sont chargés automatiquement par Shiny au lancement, il n'est donc pas nécessaire de les sourcer manuellement (source()) dans `app.R`.
 
-Pour plus de détail une documentation plus détaillée est disponible dans le dossier docu. (fichier `documentation.md`)
+Pour plus d'informations, une documentation plus détaillée est disponible dans le dossier docu. (fichier `documentation.md`)
