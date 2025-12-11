@@ -65,7 +65,8 @@ ecoforum_data <- function(
             index = '#',
             date.time = all_of(names(.)[2]),
             temperature = all_of(names(.)[3])
-          )
+          ) %>%
+          mutate(date.time = as.POSIXct(date.time, format = "%m/%d/%Y %H:%M:%S"))
       }
     )
     
