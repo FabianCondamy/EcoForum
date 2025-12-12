@@ -101,7 +101,7 @@ ecoforum_data <- function(
   temp <- read.csv(path_export_corr_terrain, sep = ";") %>%
     separate(coord, into = c("Longitude", "Latitude"), sep = ",") %>%
     mutate(across(c(Longitude, Latitude), as.numeric)) %>%
-    st_as_sf(coords = c("Longitude", "Latitude"), crs = 4326) %>%
+    st_as_sf(coords = c("Latitude", "Longitude"), crs = 4326) %>%
     st_transform(2154) %>%
     mutate(
       date.time = ymd_hms(date.time),
@@ -144,10 +144,13 @@ ecoforum_data <- function(
     get_tiles(bbox_global, crop = TRUE, provider = "OpenStreetMap")
   }, error = function(e) NULL)
   
+  batiments <- sf::st_read("../batiments/batiments.geojson")
+  batiments=sf::st_transform(batiments,3857)
+  
   # ------------------------------------------------------------
   # Retour
   # ------------------------------------------------------------
-  return(list(data = temp_final, tiles = tiles))
+  return(list(data = temp_final, tiles = tiles, batiments=batiments))
 }
 
 
