@@ -69,15 +69,7 @@ mapUI <- function(id) {
     tags$details(
       tags$summary("Explications (cliquer pour dérouler)"),
       tags$p(
-        "Dans cet onglet, vous pouvez explorer l’évolution des températures moyennes sur le campus de la faculté des sciences. ",
-        "Les cartes présentées sont obtenues à partir d’une interpolation spatiale, réalisée à l’aide de la méthode du krigeage ordinaire, ",
-        "qui permet d’estimer la température entre les points de mesure."
-      ),
-      tags$p(
-        "Ces cartes illustrent la répartition spatiale de la température pour des intervalles de 4 heures tout au long de la journée. ",
-        "À l’aide du curseur, vous pouvez faire défiler les cartes dans l’ordre chronologique. ",
-        "Pour chaque carte affichée, la date et la plage horaire correspondantes s’affichent automatiquement. ",
-        "L’échelle de température est ajustée chaque jour afin de faciliter la lecture et la comparaison des cartes."
+        "Dans cet onglet, vous pouvez explorer l’évolution des températures moyennes sur le campus de la faculté des sciences. Les cartes présentées sont obtenues à partir d’une interpolation spatiale (appelée krigeage ordinaire). Cette méthode nous permet d’estimer la température dans les zones où nous n’avons pas de capteurs, et donc d’obtenir une carte complète des températures sur tout le campus."
       )
     )
   )
