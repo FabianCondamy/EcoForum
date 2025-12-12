@@ -85,8 +85,27 @@ mapServer <- function(id) {
     
     # Lister les images
     files <- list.files(img_dir, pattern = "\\.png$", full.names = TRUE)
-    files <- sort(files)
+
+    # sort image names 
+    extract_date_raw <- function(x) {
+      fname <- basename(x)
+      
+      m <- regexec(".*_(\\d{4})_doy(\\d+)_HH", fname)
+      r <- regmatches(fname, m)[[1]]
+      
+      if (length(r) >= 3) {
+        year <- as.numeric(r[2])
+        doy  <- as.numeric(r[3])
+        return(as.Date(doy - 1, origin = paste0(year, "-01-01")))
+      }
+      
+      return(as.Date(NA))
+    }
     
+    dates_raw <- sapply(files, extract_date_raw)
+    ord <- order(dates_raw)
+    files <- files[ord]
+    dates_raw <- dates_raw[ord]
     
     # Extraction date + conversion DOY
     extract_date <- function(x) {
