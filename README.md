@@ -78,8 +78,10 @@ Note technique : Les fichiers dans `src/R/` sont chargés automatiquement par Sh
 
 Pour ajouter de nouvelles données et continuer d'utiliser l'application :
 
-1. Commencer par prélever les données des différents capteurs sur le terrain en se référant au fichier Notice_utilisation_HOBO-MX2203.docx disponible dans le sous-dossier notices de docu 
-2. Déposer les fichiers de données des différents capteurs en suivant le chemin suivant : data\raw-data\new-data\ 
-3. Nommer correctement les fichiers, ils doivent commencer par (n°XX) où XX est le numéro du capteur
+1. Commencer par prélever les données des différents capteurs sur le terrain en se référant au fichier Notice_utilisation_HOBO-MX2203.docx disponible dans le sous-dossier notices de docu
+2. Déposer les fichiers de données des différents capteurs en suivant le chemin suivant : data\new-csv\
+3. Nommer correctement les fichiers, ils doivent commencer par "(n°XX)" où XX est le numéro du capteur
+4. Compiler ensuite le fichier `pretraitement-new-csv.R` disponible dans src\R
+5. Aller dans le dossier data\raw-data et déplacer les fichiers dans le sous-dossier new-data en supprimant l'ancienne version du fichier pour chaque capteur mis à jour
 
 Pour plus d'informations, une documentation plus détaillée est disponible dans le dossier docu. (fichier `documentation.md`)
