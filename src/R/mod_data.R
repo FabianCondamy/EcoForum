@@ -144,7 +144,7 @@ ecoforum_data <- function(
     get_tiles(bbox_global, crop = TRUE, provider = "OpenStreetMap")
   }, error = function(e) NULL)
   
-  batiments <- sf::st_read("../batiments/batiments.geojson")
+  batiments <- sf::st_read("../data/batiments/batiments.geojson")
   batiments=sf::st_transform(batiments,3857)
   
   # ------------------------------------------------------------
