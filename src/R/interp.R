@@ -4,8 +4,8 @@ source("R/mod_data.R")
 data=ecoforum_data()
 dataset=data[[1]]
 temp=dataset
-tiles=dataset[[2]]
-batiments=dataset[[3]]
+tiles=data[[2]]
+batiments=data[[3]]
 
 filtered_data=function(Y,min_doy,max_doy,min_HH,max_HH){
   temp %>%
