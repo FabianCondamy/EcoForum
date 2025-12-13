@@ -1,5 +1,6 @@
 librarian::shelf(shiny, ggplot2, dplyr, sf, maptiles, raster, tidyterra, ggspatial, lubridate, tidyr,gstat,stars,readxl,stringr)
 
+source("R/mod_data.R")
 data=ecoforum_data()
 temp=data[[1]]
 batiments=data[[3]]
