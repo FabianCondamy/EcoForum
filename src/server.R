@@ -20,14 +20,6 @@ library(readxl)
 library(stringr)
 
 server <- function(input, output, session) {
-
-  # On récupère les données chargées (c'est une reactive)
-  data_loaded <- dataServer("data_source")
-  
-  # Extrait le dataframe et les tuiles
-  dataset <- data_loaded$data
-  tiles   <- data_loaded$tiles
-  temp <- dataset
   
   # Crée une liste de tous les capteurs valides
   all_sensors <- sort(unique(dataset$sensor))

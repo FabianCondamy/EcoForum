@@ -3,6 +3,7 @@ librarian::shelf(shiny, ggplot2, dplyr, sf, maptiles, raster, tidyterra, ggspati
 source("R/mod_data.R")
 data=ecoforum_data()
 temp=data[[1]]
+tiles=data[[2]]
 batiments=data[[3]]
 
 filtered_data=function(Y,min_doy,max_doy,min_HH,max_HH){
@@ -54,9 +55,6 @@ interpolation=function(Y,min_doy,max_doy,min_HH,max_HH,contours=FALSE){
   z_df=z_df[!is.na(z_df$var1.pred), ]
   z_sf=st_as_sf(z_df,coords=c("x","y"),crs=st_crs(df))
   interp_bbox=st_bbox(z_sf)
-  
-  # Fond de carte
-  tiles=get_tiles(df,crop=TRUE)
   
   #DÉCOUPE DES BÂTIMENTS À LA ZONE INTERPOLÉE
   interp_poly=st_as_sfc(interp_bbox)
