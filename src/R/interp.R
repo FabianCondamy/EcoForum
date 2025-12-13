@@ -1,8 +1,9 @@
 librarian::shelf(shiny, ggplot2, dplyr, sf, maptiles, raster, tidyterra, ggspatial, lubridate, tidyr,gstat,stars,readxl,stringr)
 
 source("R/mod_data.R")
-dataset=ecoforum_data()
-temp=dataset[[1]]
+data=ecoforum_data()
+dataset=data[[1]]
+temp=dataset
 tiles=dataset[[2]]
 batiments=dataset[[3]]
 
