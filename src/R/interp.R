@@ -1,5 +1,8 @@
 librarian::shelf(shiny, ggplot2, dplyr, sf, maptiles, raster, tidyterra, ggspatial, lubridate, tidyr,gstat,stars,readxl,stringr)
 
+data=ecoforum_data()
+temp=data[[1]]
+batiments=data[[3]]
 
 filtered_data=function(Y,min_doy,max_doy,min_HH,max_HH){
   temp %>%
