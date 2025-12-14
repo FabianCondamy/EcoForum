@@ -141,6 +141,18 @@ Ce module Shiny affiche un ensemble de statistiques descriptives par capteur, ai
 - l'intégration d'un graphique temporel et de boxplots pour le capteur choisi
 - l'affichage d'une section repliable d'explications sur les données
 
+## 4.8 `interp.R`
+
+Ce code gère la génération des différentes cartes par la méthode du krigeage ordinaire.
+
+## 4.9 `pretraitement-new-csv.R`
+
+Ce fichier permet le prétraitement des nouveaux fichiers de données des différents capteurs pour qu'ils soient ensuite traités par le module `mod_data.R`. Plus en détail, il réalise :
+
+- la suppression des colonnes inutiles du fichier csv
+- la conversion du csv en xlsx 
+- le formatage des colonnes en bons types 
+
 
 # 5. Structure générale du dossier data
 
@@ -187,7 +199,16 @@ Ce dossier contient l'ensemble des notices qui permettent de comprendre le proje
 └── Plan-capteur-HOBO.pdf                     # fichier pdf rendant compte de l'emplacement des capteurs
 ```
 
-# 7. Packages R requis pour le projet
+# 7. Structure générale du dossier batiments
+
+```batiments/
+├── Controle.R               # module Shiny gérant l'affichage et le traitement des bâtiments dans l'application
+├── batiments.geojson        # fichier de données geojson concernant les divers bâtiments présents au sein du campus     
+├── batiments_raw2.geojson   # idem que précédent     
+└── nettoyage_geoson.R       # code R gérant le traitement des bâtiments
+```
+
+# 8. Packages R requis pour le projet
 
 Avant de lancer l'application, assurez-vous que les packages suivants sont installés :
 
@@ -221,7 +242,7 @@ if(length(new_packages)) install.packages(new_packages)
 ```
 
 
-# 8. Lancer l'application Shiny
+# 9. Lancer l'application Shiny
 
 Directement via R :
 
@@ -238,7 +259,7 @@ Ou avec le bouton "Run App" dans RStudio (toujours dans le fichier app.R).
 **Note technique** : les fichiers dans `src/R/` sont chargés automatiquement par Shiny au lancement, il n'est donc pas nécessaire de les sourcer manuellement (source()) dans `app.R`.
 **Note technique n°2** : lorsque l'on change la période et/ou les capteurs sélectionnés pour visualiser ce que l'on souhaite dans les différents onglets, il est parfois nécessaire de cliquer deux fois sur le bouton de mise à jour pour que cela fonctionne correctement.
 
-# 9. Notice concernant l'ajout de nouvelles données 
+# 10. Notice concernant l'ajout de nouvelles données 
 
 Pour ajouter de nouvelles données et continuer d'utiliser l'application :
 
@@ -250,7 +271,7 @@ Pour ajouter de nouvelles données et continuer d'utiliser l'application :
 
 **NB** : il est nécessaire de récupérer les données sur l'ensemble des capteurs pour éviter un quelconque bug pour l'instant.
 
-# 10. Fonctionnement général de l'application
+# 11. Fonctionnement général de l'application
 
 1. Choisir variable, années, capteurs, DOY, heures  
 2. Cliquer sur **Mettre à jour**  
