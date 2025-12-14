@@ -17,6 +17,8 @@ L'application est structurée autour d'un fichier **app.R** composé d'une inter
 ```src/
 .
 ├── R/                                              # dossier des différents modules Shiny
+|   ├── interp.R                                    # script de génération automatique des cartes interpolées
+|   ├── pretraitement-new-csv.R                     # script de prétraitement des nouveaux fichiers de données des capteurs
 |   ├── mod_analyse.R                               # module d'analyse des données
 │   ├── mod_data.R                                  # module de préparation des données
 │   ├── mod_serietemp.R                             # module des séries temporelles
@@ -185,7 +187,7 @@ Ce dossier contient l'ensemble des notices qui permettent de comprendre le proje
 
 ```docu/
 .
-├── figures/                                  #
+├── figures/                                  # dossier contenant diverses images concernant la calibration des capteurs et la carte des capteurs
 │   ├── fig-calibration/                      # dossier contenant diverses images concernant la calibration des capteurs
 │       ├── data.calib.corr.png               # graphique rendant compte des températures mesurées en continu par chaque capteur dans l’étuve lors de la calibration
 │       ├── data.calib.moy.png                # graphique rendant compte des températures moyennes mesurées par chaque capteur dans l’étuve lors de la calibration
@@ -202,10 +204,11 @@ Ce dossier contient l'ensemble des notices qui permettent de comprendre le proje
 # 7. Structure générale du dossier batiments
 
 ```batiments/
-├── Controle.R               # module Shiny gérant l'affichage et le traitement des bâtiments dans l'application
-├── batiments.geojson        # fichier de données geojson concernant les divers bâtiments présents au sein du campus     
-├── batiments_raw2.geojson   # idem que précédent     
-└── nettoyage_geoson.R       # code R gérant le traitement des bâtiments
+.
+├── Controle.R               # module Shiny gérant l'affichage et la validation des bâtiments dans l'application
+├── batiments.geojson        # fichier de données geojson concernant les divers bâtiments présents au sein du campus utilisé après traitement    
+├── batiments_raw2.geojson   # fichier de données geojson brutes concernant les divers bâtiments présents au sein du campus    
+└── nettoyage_geoson.R       # code R gérant le traitement et nettoyage du geojson des bâtiments
 ```
 
 # 8. Packages R requis pour le projet

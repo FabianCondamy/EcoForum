@@ -15,6 +15,7 @@ EcoForum/
 │   ├── batiments.geojson       # Géométrie finale utilisée pour l’interpolation (interp.R)
 │   ├── batiments_raw2.geojson  # Fichier brut avant nettoyage
 │   └── nettoyage_geoson.R      # Script de nettoyage et préparation du geojson
+│ 
 ├── data/                       # Données du projet
 │   ├── derived-data/           # Données recalibrées
 │   ├── images/                 # Cartes générées 
@@ -25,20 +26,21 @@ EcoForum/
 │   ├── figures/                # Archives : fichiers images du calibrage des capteurs
 │   └── notices/                # Diverses notices sur l'utilisation de l'application et d'HOBO
 │
-└── src/                        # Code source de l'application
-    ├── app.R                   # Lanceur de l'application
-    ├── server.R                # Logique serveur (back-end)
-    ├── global.R                # Palette Okabe–Ito (daltoniens)
-    ├── ui.R                    # Interface utilisateur (front-end)
-    └── R/                      # Modules et fonctions (chargés automatiquement)
-        ├── interp.R            # Script de génération automatique des cartes interpolées
-        ├── mod_analyse.R       # Module : décomposition d'une série temporelle
-        ├── mod_data.R          # Gestion des données
-        ├── mod_map.R           # Module : cartes interpolées
-        ├── mod_newsection.R    # Module : nouvelle section
-        ├── mod_serietemp.R     # Module : séries temporelles
-        ├── mod_stats.R         # Module : statistiques (Boxplots)
-        └── mod_summary.R       # Module : tableau récapitulatif
+└── src/                            # Code source de l'application
+    ├── app.R                       # Lanceur de l'application
+    ├── server.R                    # Logique serveur (back-end)
+    ├── global.R                    # Palette Okabe–Ito (daltoniens)
+    ├── ui.R                        # Interface utilisateur (front-end)
+    └── R/                          # Modules et fonctions (chargés automatiquement)
+        ├── interp.R                # Script de génération automatique des cartes interpolées
+        ├── pretraitement-new-csv.R # Script qui réalise le prétraitement des nouvelles données des capteurs        
+        ├── mod_analyse.R           # Module : décomposition d'une série temporelle
+        ├── mod_data.R              # Gestion des données
+        ├── mod_map.R               # Module : cartes interpolées
+        ├── mod_newsection.R        # Module : nouvelle section
+        ├── mod_serietemp.R         # Module : séries temporelles
+        ├── mod_stats.R             # Module : statistiques (Boxplots)
+        └── mod_summary.R           # Module : tableau récapitulatif
 ```
 ---
 ## Préparation des données : génération des cartes 
