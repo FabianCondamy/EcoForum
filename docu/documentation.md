@@ -235,6 +235,8 @@ shiny::runApp()
 ```
 Ou avec le bouton "Run App" dans RStudio (toujours dans le fichier app.R).
 
+**Note technique** : les fichiers dans `src/R/` sont chargés automatiquement par Shiny au lancement, il n'est donc pas nécessaire de les sourcer manuellement (source()) dans `app.R`.
+**Note technique n°2** : lorsque l'on change la période et/ou les capteurs sélectionnés pour visualiser ce que l'on souhaite dans les différents onglets, il est parfois nécessaire de cliquer deux fois sur le bouton de mise à jour pour que cela fonctionne correctement.
 
 # 9. Notice concernant l'ajout de nouvelles données 
 
