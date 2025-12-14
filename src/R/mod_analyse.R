@@ -117,7 +117,7 @@ analyseServer <- function(id, data, variable_name = reactive("temp.corr")) {
             "Variable : ", var_sel,
             " | Moyenne des résidus = ", mean_res_str
           ),
-          x = NULL, y = "Valeur"
+          x = NULL, y = "Température (°C)"
         )+
         theme_bw() +
         theme(strip.text = element_text(face = "bold", size = 11),
