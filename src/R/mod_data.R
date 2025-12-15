@@ -1,5 +1,31 @@
 #  Ce fichier compile, calibre, corrige et prépare les données HOBO
 
+# Fonction pour convertir les csv en xlsx car HOBO renvoie des fichiers csv maintenant
+
+convert_csv_to_xlsx <- function(path_newdata) {
+  files <- list.files(path_newdata, pattern = "\\.csv$", full.names = TRUE)
+  
+  if (length(files) == 0) {
+    message("Aucun fichier CSV à convertir.")
+    return(invisible(NULL))
+  }
+  
+  message("→ Conversion des CSV en XLSX...")
+  
+  for (f in files) {
+    df <- read.csv(f, sep = ";", dec = ".", stringsAsFactors = FALSE)
+    
+    # Nouveau chemin avec extension .xlsx
+    new_f <- sub("\\.csv$", ".xlsx", f)
+    
+    writexl::write_xlsx(df, new_f)
+  }
+  
+  message("✓ Conversion terminée.")
+}
+
+# Import général de tous les fichiers de données nécessaires
+
 ecoforum_data <- function(
     path_ref = "../data/raw-data/temp_ref.csv",
     path_habitat = "../data/raw-data/habitat.csv",
@@ -13,9 +39,17 @@ ecoforum_data <- function(
     path_export_corr_terrain = "../data/derived-data/new-data_corr.csv"
 ) {
   
-  # 0. COMPILATION AUTOMATIQUE DES DONNÉES HOBO
+  # 0. Compilation automatique des données HOBO
   
   if (dir.exists(path_newdata)) {
+    
+    # Convertir tous les CSV du dossier en XLSX
+    convert_csv_to_xlsx(path_newdata)
+    
+    message("→ Compilation des fichiers HOBO...")
+    
+    metadata <- read_xlsx(path_metadata, col_names = TRUE)
+    files.to.load <- list.files(path_newdata, pattern = "\\.xlsx$")
     
     message("→ Compilation des fichiers HOBO...")
     
@@ -31,7 +65,8 @@ ecoforum_data <- function(
             index = '#',
             date.time = all_of(names(.)[2]),
             temperature = all_of(names(.)[3])
-          )
+          ) %>%
+          mutate(date.time = as.POSIXct(date.time, format = "%m/%d/%Y %H:%M:%S"))
       }
     )
     
@@ -95,7 +130,7 @@ ecoforum_data <- function(
   }
   
 
-  # 1. CHARGEMENT POUR L’APPLICATION (après correction)
+  # 1. Chargement de l'application (après correction)
 
   
   temp <- read.csv(path_export_corr_terrain, sep = ";") %>%

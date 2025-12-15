@@ -13,8 +13,17 @@ analyseUI <- function(id) {
     hr(),
     h4("Décomposition STL"),
     p("Décomposition utilisant la méthode STL."),
-    plotOutput(ns("plot_decomp"), height = "600px")
-  )
+    plotOutput(ns("plot_decomp"), height = "600px"),
+    tags$details(
+      tags$summary("Explications (cliquer pour dérouler)"),
+      tags$p(
+        "Sur les capteurs sélectionnés, nous décomposons l’évolution au cours du temps de la température (moyenne sur les capteurs).
+  Les données sont préalablement agrégées à l’échelle horaire.
+  La série est séparée en trois composantes : une tendance correspondant à l’évolution globale de la température à long terme,
+  une saisonnalité représentant un cycle régulier selon la période choisie par l’utilisateur,
+  et un résidu, défini comme la différence entre les données observées et la somme de la tendance et de la saisonnalité."
+      )
+    ))
 }
 analyseServer <- function(id, data, variable_name = reactive("temp.corr")) {
   moduleServer(id, function(input, output, session) {
@@ -58,6 +67,10 @@ analyseServer <- function(id, data, variable_name = reactive("temp.corr")) {
           need(FALSE, "Erreur STL : fréquence incompatible ou série trop courte.")
         )
       }
+      residus <- as.numeric(decomp$time.series[, "remainder"])
+      mean_res <- mean(residus, na.rm = TRUE)
+      # On formate le chiffre pour qu'il soit joli (ex: 2.4e-16)
+      mean_res_str <- format(mean_res, scientific = FALSE, digits = 3)
       
       # Préparer dataframe pour ggplot
       df_plot <- data.table(
@@ -96,13 +109,16 @@ analyseServer <- function(id, data, variable_name = reactive("temp.corr")) {
       # Plot final
       ggplot(df_plot, aes(x = Date, y = Valeur, color = Composante)) +
         geom_line(linewidth = 0.6) + #####
-        facet_grid(Composante ~ ., scales = "free_y") +
+      facet_grid(Composante ~ ., scales = "free_y") +
         scale_color_manual(values = cols) +
         labs(
           title = paste("Décomposition :", titre_cycle),
-          subtitle = paste("Variable :", var_sel, "- Méthode STL"),
-          x = NULL, y = "Valeur"
-        ) +
+          subtitle = paste0(
+            "Variable : ", var_sel,
+            " | Moyenne des résidus = ", mean_res_str
+          ),
+          x = NULL, y = "Température (°C)"
+        )+
         theme_bw() +
         theme(strip.text = element_text(face = "bold", size = 11),
               legend.position = "none") +

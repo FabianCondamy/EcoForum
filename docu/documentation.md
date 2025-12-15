@@ -17,8 +17,10 @@ L'application est structurée autour d'un fichier **app.R** composé d'une inter
 ```src/
 .
 ├── R/                                              # dossier des différents modules Shiny
-|   ├── mod_analyse.R       
-│   ├── mod_data.R                                  # préparation des données
+|   ├── interp.R                                    # script de génération automatique des cartes interpolées
+|   ├── pretraitement-new-csv.R                     # script de prétraitement des nouveaux fichiers de données des capteurs
+|   ├── mod_analyse.R                               # module d'analyse des données
+│   ├── mod_data.R                                  # module de préparation des données
 │   ├── mod_serietemp.R                             # module des séries temporelles
 │   ├── mod_map.R                                   # module des cartes spatiales
 │   ├── mod_stats.R                                 # module des statistiques générales et des boxplots
@@ -106,6 +108,8 @@ Ce module génère une série de cartes générées à partir de l'ensemble des 
 - la conversion de la DOY en date réelle
 - l'affichage d'une image légendée avec un slider permettant de sélectionner la date voulue
 
+Grâce à ce fichier, il est possible de mettre à jour l'application pour de nouvelles données. Pour ceci, suivez les étapes décrite plus bas au point #9. 
+
 ## 4.4 `mod_newsection.R`
 
 Ce module fournit une page vide dans l'application prête à être complétée pour accueillir de nouvelles features. Il effectue :
@@ -139,10 +143,17 @@ Ce module Shiny affiche un ensemble de statistiques descriptives par capteur, ai
 - l'intégration d'un graphique temporel et de boxplots pour le capteur choisi
 - l'affichage d'une section repliable d'explications sur les données
 
+## 4.8 `interp.R`
 
-## 4.8 `compilation-calibration-data.R`
+Ce code gère la génération des différentes cartes par la méthode du krigeage ordinaire.
 
+## 4.9 `pretraitement-new-csv.R`
 
+Ce fichier permet le prétraitement des nouveaux fichiers de données des différents capteurs pour qu'ils soient ensuite traités par le module `mod_data.R`. Plus en détail, il réalise :
+
+- la suppression des colonnes inutiles du fichier csv
+- la conversion du csv en xlsx 
+- le formatage des colonnes en bons types 
 
 
 # 5. Structure générale du dossier data
@@ -152,17 +163,17 @@ Le dossier data à vocation d'accueillir l'ensemble des fichiers de données uti
 ```data/
 .
 ├── derived-data/                   # dossier contenant les fichiers de données traités et recalibrés
-│   ├── 250703.csv                  # 
-│   ├── 250703_corr.csv             #
-│   ├── correction.csv              #
+│   ├── new-data.csv                # fichier obtenu après compilation
+│   ├── new-data_corr.csv           # fichier obtenu après compilation/calibration
+│   ├── correction.csv              # fichier représentant la correction à appliquer à chaque capteur pour les calibrer
 │   └── data.calibr.csv             # jeu de données de calibration des capteurs
 ├── raw-data/                       # fichiers de données brutes    
-│   ├── 250703/                     # données brutes récoltées sur les capteurs 
+│   ├── new-data/                   # dernières données brutes récoltées sur les capteurs 
 │       ├── (n°02)                  # fichier de données du premier capteur (n°2)
 │       ├──  ...                    # fichiers de données des autres capteurs
 │       └── (n°38)                  # fichier de données du dernier capteur (n°38) 
 │   ├── new-csv/                    # dossier vide dédié à l'accueil de nouvelles données
-│   ├── data.terrain.corrige.csv    # 
+│   ├── data.terrain.corrige.csv    # fichier contenant les données sur le terrain et les corrections à appliquer aux capteurs
 │   ├── habitat.csv                 # jeu de données rendant compte du type d'habitat dans lequel les capteurs sont positionnés 
 │   ├── listing-HOBO.xlsx           # jeu de données contenant les informations sur les capteurs (coordonnées, modèle, numéro de série)
 │   ├── map.osm                     # carte openstreetmap
@@ -176,7 +187,7 @@ Ce dossier contient l'ensemble des notices qui permettent de comprendre le proje
 
 ```docu/
 .
-├── figures/                                  #
+├── figures/                                  # dossier contenant diverses images concernant la calibration des capteurs et la carte des capteurs
 │   ├── fig-calibration/                      # dossier contenant diverses images concernant la calibration des capteurs
 │       ├── data.calib.corr.png               # graphique rendant compte des températures mesurées en continu par chaque capteur dans l’étuve lors de la calibration
 │       ├── data.calib.moy.png                # graphique rendant compte des températures moyennes mesurées par chaque capteur dans l’étuve lors de la calibration
@@ -190,7 +201,17 @@ Ce dossier contient l'ensemble des notices qui permettent de comprendre le proje
 └── Plan-capteur-HOBO.pdf                     # fichier pdf rendant compte de l'emplacement des capteurs
 ```
 
-# 7. Packages R requis pour le projet
+# 7. Structure générale du dossier batiments
+
+```batiments/
+.
+├── Controle.R               # module Shiny gérant l'affichage et la validation des bâtiments dans l'application
+├── batiments.geojson        # fichier de données geojson concernant les divers bâtiments présents au sein du campus utilisé après traitement    
+├── batiments_raw2.geojson   # fichier de données geojson brutes concernant les divers bâtiments présents au sein du campus    
+└── nettoyage_geoson.R       # code R gérant le traitement et nettoyage du geojson des bâtiments
+```
+
+# 8. Packages R requis pour le projet
 
 Avant de lancer l'application, assurez-vous que les packages suivants sont installés :
 
@@ -224,7 +245,7 @@ if(length(new_packages)) install.packages(new_packages)
 ```
 
 
-# 8. Lancer l'application Shiny
+# 9. Lancer l'application Shiny
 
 Directement via R :
 
@@ -238,18 +259,22 @@ shiny::runApp()
 ```
 Ou avec le bouton "Run App" dans RStudio (toujours dans le fichier app.R).
 
+**Note technique** : les fichiers dans `src/R/` sont chargés automatiquement par Shiny au lancement, il n'est donc pas nécessaire de les sourcer manuellement (source()) dans `app.R`.
+**Note technique n°2** : lorsque l'on change la période et/ou les capteurs sélectionnés pour visualiser ce que l'on souhaite dans les différents onglets, il est parfois nécessaire de cliquer deux fois sur le bouton de mise à jour pour que cela fonctionne correctement.
 
-# 9. Notice concernant l'ajout de nouvelles données 
+# 10. Notice concernant l'ajout de nouvelles données 
 
 Pour ajouter de nouvelles données et continuer d'utiliser l'application :
 
-1) Commencer par prélever les données des différents capteurs sur le terrain en se référant au fichier Notice_utilisation_HOBO-MX2203.docx disponible dans le sous-dossier notices de docu
-2) Déposer les fichiers de données des différents capteurs en suivant le chemin suivant : data\raw-data\new-csv\
-3) Lancer le fichier compilation-calibration-data.R disponible dans le dossier src
-4) Suivre les étapes du point précédent pour lancer l'application avec les nouvelles données
+1. Commencer par prélever les données des différents capteurs sur le terrain en se référant au fichier Notice_utilisation_HOBO-MX2203.docx disponible dans le sous-dossier notices de docu
+2. Déposer les fichiers de données des différents capteurs en suivant le chemin suivant : data\new-csv\
+3. Nommer correctement les fichiers, ils doivent commencer par "(n°XX)" où XX est le numéro du capteur
+4. Compiler ensuite le fichier `pretraitement-new-csv.R` disponible dans src\R
+5. Aller dans le dossier data\raw-data et déplacer les fichiers dans le sous-dossier new-data en supprimant l'ancienne version du fichier pour chaque capteur mis à jour
 
+**NB** : il est nécessaire de récupérer les données sur l'ensemble des capteurs pour éviter un quelconque bug pour l'instant.
 
-# 10. Fonctionnement général de l'application
+# 11. Fonctionnement général de l'application
 
 1. Choisir variable, années, capteurs, DOY, heures  
 2. Cliquer sur **Mettre à jour**  

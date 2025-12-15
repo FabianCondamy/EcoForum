@@ -10,37 +10,56 @@ Cette application Shiny permet d'analyser des données de température mesurées
 Le projet se structure de la manière suivante : 
 ```text
 EcoForum/
-├── data/                   # Données du projet
-│   ├── derived-data/       
-│   ├── images/             
-│   ├── new-csv/           
-│   └── raw-data/         
+├── batiments/                  # Contient les données géographiques des bâtiments et les scripts associés
+│   ├── Controle.R              # Script de contrôle/validation des données bâtiments      
+│   ├── batiments.geojson       # Géométrie finale utilisée pour l’interpolation (interp.R)
+│   ├── batiments_raw2.geojson  # Fichier brut avant nettoyage
+│   └── nettoyage_geoson.R      # Script de nettoyage et préparation du geojson
+│ 
+├── data/                       # Données du projet
+│   ├── derived-data/           # Données recalibrées
+│   ├── images/                 # Cartes générées 
+│   └── raw-data/               # Données brutes 
 │
-├── docu/                   # Documentation et archives
-│   ├── analyses/           
-│   ├── figures/            
-│   └── notices/            
+├── docu/                       # Documentation et archives
+│   ├── analyses/               # Archives : anciens codes R
+│   ├── figures/                # Archives : fichiers images du calibrage des capteurs
+│   └── notices/                # Diverses notices sur l'utilisation de l'application et d'HOBO
 │
-└── src/                    # Code source de l'application
-    ├── app.R               # Lanceur de l'application
-    ├── server.R            # Logique serveur (Back-end)
-    ├── ui.R                # Interface utilisateur (Front-end)
-    └── R/                  # Modules et Fonctions (Chargement automatique)
-        ├── mod_data.R      # Gestion des données
-        ├── mod_map.R       # Module : Cartographie interactive
-        ├── mod_serietemp.R # Module : Séries temporelles
-        ├── mod_analyse.R     # Module : Décomposition d'une série temporelle
-        ├── mod_stats.R     # Module : Statistiques (Boxplots)
-        ├── mod_video.R     # Module : Vidéo
-        ├── mod_stats.R     # Module : Statistiques (Boxplots)
-        ├── mod_newsection.R    # Module : Nouvelle section
-        └── mod_summary.R   # Module : Tableau récapitulatif
+└── src/                            # Code source de l'application
+    ├── app.R                       # Lanceur de l'application
+    ├── server.R                    # Logique serveur (back-end)
+    ├── global.R                    # Palette Okabe–Ito (daltoniens)
+    ├── ui.R                        # Interface utilisateur (front-end)
+    └── R/                          # Modules et fonctions (chargés automatiquement)
+        ├── interp.R                # Script de génération automatique des cartes interpolées
+        ├── pretraitement-new-csv.R # Script qui réalise le prétraitement des nouvelles données des capteurs        
+        ├── mod_analyse.R           # Module : décomposition d'une série temporelle
+        ├── mod_data.R              # Gestion des données
+        ├── mod_map.R               # Module : cartes interpolées
+        ├── mod_newsection.R        # Module : nouvelle section
+        ├── mod_serietemp.R         # Module : séries temporelles
+        ├── mod_stats.R             # Module : statistiques (Boxplots)
+        └── mod_summary.R           # Module : tableau récapitulatif
 ```
 ---
+## Préparation des données : génération des cartes 
+
+Avant de lancer l'application Shiny, il est indispensable d'exécuter le script `interp.R` (dans src/R/).
+Ce script génère l'ensemble des cartes interpolées nécessaires au fonctionnement de la section cartographique.
+Les cartes seront automatiquement enregistrées dans data/images/.
+
+**Durée d'exécution :** 
+
+Avec les données actuelles, le script met environ 2 heures à s'exécuter. Si davantage de données sont ajoutées dans le futur, le temps d'exécution augmentera proportionnellement.
+
+Pour lancer ce script, ouvrir `interp.R` dans RStudio et exécuter l'intégralité du fichier.
 
 ## Installation et Lancement
 
-Les données doivent être présentes dans le dossier data/ à la racine du projet.
+Comme indiqué avant, les données doivent être présentes dans le dossier data/ à la racine du projet.
+
+Une fois le script `interp.R` exécuté et les cartes générées, vous pouvez lancer l'application.
 
 **Comment lancer l'application ?**
 
@@ -55,4 +74,18 @@ Pour lancer l'application sans ambiguïté sur le répertoire de travail, exécu
 shiny::runApp("src")
 ```
 
-Note technique : Les fichiers dans `src/R/` sont chargés automatiquement par Shiny au lancement, il n'est donc pas nécessaire de les sourcer manuellement (source()) dans `app.R`.
+Note technique : les fichiers dans `src/R/` sont chargés automatiquement par Shiny au lancement, il n'est donc pas nécessaire de les sourcer manuellement (source()) dans `app.R`.
+
+Note technique n°2 : lorsque l'on change la période et/ou les capteurs sélectionnés pour visualiser ce que l'on souhaite dans les différents onglets, il est parfois nécessaire de cliquer deux fois sur le bouton de mise à jour pour que cela fonctionne correctement.
+
+## Ajout de nouvelles données
+
+Pour ajouter de nouvelles données et continuer d'utiliser l'application :
+
+1. Commencer par prélever les données des différents capteurs sur le terrain en se référant au fichier Notice_utilisation_HOBO-MX2203.docx disponible dans le sous-dossier notices de docu
+2. Déposer les fichiers de données des différents capteurs en suivant le chemin suivant : data\new-csv\
+3. Nommer correctement les fichiers, ils doivent commencer par "(n°XX)" où XX est le numéro du capteur
+4. Compiler ensuite le fichier `pretraitement-new-csv.R` disponible dans src\R
+5. Aller dans le dossier data\raw-data et déplacer les fichiers dans le sous-dossier new-data en supprimant l'ancienne version du fichier pour chaque capteur mis à jour
+
+Pour plus d'informations, une documentation plus détaillée est disponible dans le dossier docu. (fichier `documentation.md`)
