@@ -70,7 +70,7 @@ summaryUI <- function(id) {
       tags$br(),
       tags$details(
         tags$summary("Explications (cliquer pour dérouler)"),
-        tags$p("Cette page permet d'explorer les statistiques globales et celles d'un seul capteur sélectionné…")
+        tags$p("Cette page permet de consulter des valeurs simples (minimum, moyenne et maximum) pour l’ensemble des capteurs et pour un capteur choisi.")
       )
     )
 }
