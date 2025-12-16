@@ -1,42 +1,11 @@
 librarian::shelf(shiny, ggplot2, dplyr, sf, maptiles, raster, tidyterra, ggspatial, lubridate, tidyr,gstat,stars,readxl,stringr)
 
-ref <- read.csv("../data/raw-data/temp_ref.csv", h = TRUE, sep = ",") %>%
-  group_by(X_date) %>%
-  summarise(temp.ref = mean(outside_temp)) %>%
-  mutate(date = ymd(X_date),
-         YYYY = year(date),
-         MM = month(date),
-         DD = day(date)) %>%
-  dplyr::select(-X_date)
-
-temp <- read.csv("../data/derived-data/new-data_corr.csv", h = TRUE, sep = ";") %>%
-  separate(coord, sep = ",", into = c("Longitude", "Latitude"))
-
-habitat <- read.csv("../data/raw-data/habitat.csv", h = TRUE, sep = ";") %>%
-  rename(sensor = id) %>%
-  dplyr::select(sensor, type.zone)
-
-# Transformation spatiale et enrichissement
-temp <- st_as_sf(temp, coords = c("Latitude", "Longitude"), crs = 4326) %>%
-  st_transform("EPSG:2154") %>%
-  mutate(date.time = ymd_hms(date.time),
-         YYYY = year(date.time),
-         MM = month(date.time),
-         DD = day(date.time),
-         HH = hour(date.time),
-         Min = minute(date.time),
-         SS = second(date.time),
-         doy = yday(make_date(YYYY, MM, DD))) %>%
-  left_join(habitat, by = "sensor") %>%
-  left_join(ref, by = c("YYYY", "MM", "DD")) %>%
-  mutate(temp.ecart.raw = temp.corr - temp.ref,
-         temp.ecart.prc = (temp.corr - temp.ref) / temp.ref)
-
-temp$month_name <- factor(month.name[temp$MM], levels = month.name)
-
-batiments <- sf::st_read("../batiments/batiments.geojson")
-batiments=sf::st_transform(batiments,3857)
-
+source("R/mod_data.R")
+data=ecoforum_data()
+dataset=data[[1]]
+temp=dataset
+tiles=data[[2]]
+batiments=data[[3]]
 
 filtered_data=function(Y,min_doy,max_doy,min_HH,max_HH){
   temp %>%
@@ -57,7 +26,7 @@ interpolation=function(Y,min_doy,max_doy,min_HH,max_HH,contours=FALSE){
   
   df = st_transform(df, 2154)
   df=df %>% dplyr::select(temperature,geometry)
-  df_reduce=df %>%
+  df=df %>%
     group_by(geometry) %>%
     summarise(temperature=mean(temperature))
   
@@ -72,7 +41,7 @@ interpolation=function(Y,min_doy,max_doy,min_HH,max_HH,contours=FALSE){
   #print(plot(v))
   #print(plot(v,v_mod_ok))
 
-  g=gstat(formula=temperature~1,model=v_mod_ok,data=df_reduce)
+  g=gstat(formula=temperature~1,model=v_mod_ok,data=df)
   z=predict(g,newdata=grid)
   
   #rmse=sqrt(mean((df$temperature-z$var1.pred)^2))
@@ -87,9 +56,6 @@ interpolation=function(Y,min_doy,max_doy,min_HH,max_HH,contours=FALSE){
   z_df=z_df[!is.na(z_df$var1.pred), ]
   z_sf=st_as_sf(z_df,coords=c("x","y"),crs=st_crs(df))
   interp_bbox=st_bbox(z_sf)
-  
-  # Fond de carte
-  tiles=get_tiles(df,crop=TRUE)
   
   #DÉCOUPE DES BÂTIMENTS À LA ZONE INTERPOLÉE
   interp_poly=st_as_sfc(interp_bbox)
@@ -142,7 +108,7 @@ interpolation=function(Y,min_doy,max_doy,min_HH,max_HH,contours=FALSE){
 ## chaque carte représente une interpolation de la température moyenne de chaque capteur dans un intervalle de 4h ##
 
 verif=function(){
-  if (!dir.exists("../data/images")) {
+  if (!dir.exists("..data/images")) {
     dir.create("../data/images")
   }
   

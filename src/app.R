@@ -9,6 +9,7 @@ source("R/mod_stats.R")
 source("R/mod_summary.R")
 source("R/mod_newsection.R")
 source("R/mod_analyse.R")
+source("R/interp.R")
 
 # UI et server
 source("ui.R")

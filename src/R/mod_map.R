@@ -1,98 +1,87 @@
-# Module UI
 mapUI <- function(id) {
   ns <- NS(id)
   
+  months_fr <- c(
+    "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+    "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+    )
+  
   tagList(
-    
     div(
       style = "max-width:700px; margin:0 auto; text-align:center;",
-      tags$h4("Cartes générées à partir de tous les capteurs",style = "margin-bottom:20px; font-weight:600;"),
+      tags$h4("Cartes générées à partir de tous les capteurs",
+              style = "margin-bottom:20px; font-weight:600;"),
       div(
         style = "display:flex; gap:15px; align-items:flex-start; justify-content:center;",
-        shinycssloaders::
-          withSpinner(imageOutput(ns("img_current"), height = "500"),type = 4, color = "#56B4E9", size = 1.2),
+        shinycssloaders::withSpinner(
+          imageOutput(ns("img_current"), height = "500"),
+          type = 4, color = "#56B4E9", size = 1.2
+        ),
         div(
-          style = "
-          width:200px;
-          font-size:13px;
-          background:#f9f9f9;
-          padding:10px;
-          border-radius:6px;
-          text-align:left;
-          margin-top:160px;
-          ",
+          style = "width:200px; font-size:13px; background:#f9f9f9; padding:10px;
+                 border-radius:6px; text-align:left; margin-top:160px;",
           
           tags$strong("Couleurs & températures"),
           tags$p(
             style = "margin-top:8px;",
-            "Les tons bleus représentent les zones les plus fraîches, tandis que les tons rouges indiquent les températures plus élevées.")
+            "Les tons bleus représentent les zones les plus fraîches, tandis que les tons rouges indiquent les températures plus élevées."
           )
         )
-      ),
+      )
+    ),
     
     # Slider
     div(
       style = "margin-top:-30px; margin-bottom:-10px; text-align:center;",
       sliderInput(ns("frame"), "Image :",
-                  min = 1, max = 1, value = 1, step = 1, 
-                  width = "100%")
-      ),
-    
+                  min = 1, max = 1, value = 1, step = 1, width = "100%")
+    ),
     
     # Date range
     div(
       style = "display:flex; justify-content: space-between; font-size:14px; margin-bottom: 5px",
       span(textOutput(ns("date_start"))),
       span(textOutput(ns("date_end")))
-      ),
+    ),
     
     # Interactive date block
     wellPanel(
       fluidRow(
         column(2, numericInput(ns("day"), "Jour", value = 1, min = 1, max = 31)),
-        column(4, selectInput(ns("month"), "Mois", choices = month.name)),
+        column(4,
+               shinyWidgets::pickerInput(
+                 ns("month"), "Mois",
+                 choices = setNames(1:12, months_fr),
+                 options = list(liveSearch = FALSE,size = 5,actionsBox = FALSE,dropupAuto = FALSE))
+               ),
         column(3, selectInput(ns("year"), "Année", choices = c(2024, 2025))),
         
         # This is the version with an active selection button has a problem: it lags when launched from an app rather than a browser.
         # column(3, selectInput(ns("hour"), "Heure", choices = c("0-3","4-7","8-11","12-15","16-19","20-23")))
         
-        column(3,div(style = "position: relative;",
-                     
-                     # Disabled selectInput
-                     tags$div(style = "pointer-events:none;opacity:0.7;",
-                              selectInput(ns("hour"),"Heure",choices = c("0-3","4-7","8-11","12-15","16-19","20-23"))
-                              ),
-                     
-                     # Help icon
-                     tags$span(icon("question"),id = ns("hour_help_icon"),
-                               style = "
-                               position:absolute;
-                               top:6px;
-                               right:10px;
-                               cursor: help;
-                               color:#666;
-                               pointer-events:auto;
-                               "),
-                     
-                     # Tooltip (content-relative, above the field)
-                     tags$div(id = ns("hour_help_text"),
-                              style = "
-                              display:none;
-                              position:absolute;
-                              bottom:110%;
-                              right:0;
-                              width:320px;
-                              background:white;
-                              border:1px solid #ccc;
-                              border-radius:6px;
-                              padding:12px;
-                              font-size:12px;
-                              box-shadow:0 4px 10px rgba(0,0,0,0.15);
-                              z-index:1000;")
-                     )
+        column(3,
+               div(style = "position: relative;",
+                   
+                   # Disabled selectInput
+                   tags$div(style = "pointer-events:none;opacity:0.7;",
+                            selectInput(ns("hour"), "Heure",
+                                        choices = c("0-3","4-7","8-11","12-15","16-19","20-23"))
+                   ),
+                   
+                   # Help icon
+                   tags$span(icon("question"), id = ns("hour_help_icon"),
+                             style = "position:absolute; top:6px; right:10px; cursor:help; color:#666; pointer-events:auto;"),
+                   
+                   # Tooltip (content-relative, above the field)
+                   tags$div(id = ns("hour_help_text"),
+                            style = "display:none; position:absolute; bottom:110%; right:0; width:320px;
+                                   background:white; border:1px solid #ccc; border-radius:6px;
+                                   padding:12px; font-size:12px;
+                                   box-shadow:0 4px 10px rgba(0,0,0,0.15); z-index:1000;")
                )
         )
-      ),
+      )
+    ),
     
     # Tooltip JS logic
     tags$script(HTML(sprintf("
@@ -111,15 +100,9 @@ mapUI <- function(id) {
         to navigate to the previous or next image in the temporal sequence.
       `;
 
-      hourIcon.addEventListener('mouseenter', () => {
-        hourText.style.display = 'block';
-      });
-
-      hourIcon.addEventListener('mouseleave', () => {
-        hourText.style.display = 'none';
-      });
+      hourIcon.addEventListener('mouseenter', () => {hourText.style.display = 'block';});
+      hourIcon.addEventListener('mouseleave', () => {hourText.style.display = 'none';});
     ", ns("hour_help_icon"), ns("hour_help_text")))),
-    
     
     # Explanation block
     tags$details(
@@ -128,109 +111,115 @@ mapUI <- function(id) {
         "Dans cet onglet, vous pouvez explorer l’évolution des températures moyennes
         sur le campus de la faculté des sciences. Les cartes présentées sont obtenues
         à partir d’une interpolation spatiale, appelée krigeage ordinaire, permettant
-        d’estimer la température dans les zones non instrumentées.")
+        d’estimer la température dans les zones non instrumentées."
+      )
     )
   )
-  }
+}
 
-# Module server
 mapServer <- function(id) {
   img_dir <- file.path("..", "data", "images")
   
   moduleServer(id, function(input, output, session) {
+    
     ns <- session$ns
+    
+    months_fr <- c(
+      "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+      "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+      )
     
     files <- list.files(img_dir, pattern = "\\.png$", full.names = TRUE)
     
-    # Parse filename into structured date-time components   
     parse_file <- function(x) {
       fname <- basename(x)
       m <- regexec(".*_(\\d{4})_doy(\\d+)_HH([0-9]+-[0-9]+)", fname)
       r <- regmatches(fname, m)[[1]]
       if(length(r) == 4){
-        year <- as.numeric(r[2])
-        doy  <- as.numeric(r[3])
+        year <- as.integer(r[2])
+        doy  <- as.integer(r[3])
         hour <- r[4]
-        date_real <- as.Date(doy-1, origin=paste0(year,"-01-01"))
+        date_real <- as.Date(doy - 1, origin = paste0(year, "-01-01"))
         list(
-          year = year,
-          day  = as.integer(format(date_real,"%d")),
-          month= format(date_real,"%B"),
-          hour = hour,
-          doy = doy
+          year  = year,
+          day   = as.integer(format(date_real, "%d")),
+          month = as.integer(format(date_real, "%m")),
+          hour  = hour,
+          doy   = doy
         )
       } else NULL
     }
     
     dates_list <- lapply(files, parse_file)
     
-    # Sort files and dates by year, DOY and hour sequence
     hour_order <- c("0-3","4-7","8-11","12-15","16-19","20-23")
     order_idx <- order(
-      sapply(dates_list, function(d) d$year),
-      sapply(dates_list, function(d) d$doy),
+      sapply(dates_list, `[[`, "year"),
+      sapply(dates_list, `[[`, "doy"),
       sapply(dates_list, function(d) match(d$hour, hour_order))
     )
+    
     files <- files[order_idx]
     dates_list <- dates_list[order_idx]
     
     img_cache <- list()
     
     # Retrieve image, load once into cache
-    get_image <- function(i){
+    get_image <- function(i) {
       key <- as.character(i)
-      if(!key %in% names(img_cache)){
+      if (!key %in% names(img_cache)) {
         img_cache[[key]] <<- image_read(files[i])
       }
       img_cache[[key]]
     }
     
     # first frame
-    first_idx <- 1
-    current <- reactiveVal(first_idx)
+    current <- reactiveVal(1)
     
     output$date_start <- renderText({
-      d <- dates_list[[first_idx]]
-      paste(d$day,d$month,d$year)
+      d <- dates_list[[1]]
+      paste(sprintf("%02d", d$day), months_fr[d$month], d$year)
     })
     
     output$date_end <- renderText({
-      last <- dates_list[[length(dates_list)]]
-      paste(last$day,last$month,last$year)
+      d <- dates_list[[length(dates_list)]]
+      paste(sprintf("%02d", d$day), months_fr[d$month], d$year)
     })
     
-    first_date <- dates_list[[first_idx]]
-    updateSliderInput(session,"frame",min=1,max=length(files),value=first_idx)
-    updateNumericInput(session,"day",value=first_date$day)
-    updateSelectInput(session,"month",selected=first_date$month)
-    updateSelectInput(session,"year",selected=first_date$year)
-    updateSelectInput(session,"hour",selected=first_date$hour)
+    # Initialization after boot
+    session$onFlushed(function() {
+      first_date <- dates_list[[1]]
+      updateSliderInput(session, "frame", min=1, max=length(files), value=1)
+      updateNumericInput(session, "day", value=first_date$day)
+      shinyWidgets::updatePickerInput(session, "month", selected=first_date$month)
+      updateSelectInput(session, "year", selected=first_date$year)
+      updateSelectInput(session, "hour", selected=first_date$hour)
+    }, once = TRUE)
     
-    # Slider -> date fields
+    # Slider -> inputs
     observeEvent(input$frame, {
-      isolate({
-        d <- dates_list[[input$frame]]
-        current(input$frame)
-        updateSelectInput(session,"year",selected=d$year)
-        updateNumericInput(session,"day",value=d$day)
-        updateSelectInput(session,"month",selected=d$month)
-        updateSelectInput(session,"hour",selected=d$hour)
-      })
+      req(input$frame)
+      d <- dates_list[[input$frame]]
+      current(input$frame)
+      updateNumericInput(session, "day", value=d$day)
+      shinyWidgets::updatePickerInput(session, "month", selected=d$month)
+      updateSelectInput(session, "year", selected=d$year)
+      updateSelectInput(session, "hour", selected=d$hour)
     })
     
-    # Date fields -> slider
+    # Inputs -> slider
     observe({
-      year_match  <- input$year
-      day_match   <- input$day
-      month_match <- input$month
-      hour_match  <- input$hour
-      idx <- which(sapply(dates_list,function(d){
-        !is.null(d) && d$year==year_match && d$day==day_match &&
-          d$month==month_match && d$hour==hour_match
+      req(input$year, input$month, input$day, input$hour)
+      idx <- which(sapply(dates_list, function(d) {
+        !is.null(d) &&
+          d$year == input$year &&
+          d$month == input$month &&
+          d$day == input$day &&
+          d$hour == input$hour
       }))
-      if(length(idx)==1 && idx != isolate(current())){
+      if(length(idx) == 1 && idx != isolate(current())) {
         current(idx)
-        updateSliderInput(session,"frame",value=idx)
+        updateSliderInput(session, "frame", value=idx)
       }
     })
     
@@ -238,12 +227,8 @@ mapServer <- function(id) {
     output$img_current <- renderImage({
       tmpfile <- tempfile(fileext = ".png")
       image_write(get_image(current()), tmpfile)
-      list(
-        src = tmpfile,
-        contentType = "image/png",
-        width = "100%",
-        height = "auto"
-      )
+      list(src = tmpfile, contentType="image/png", width="100%",height = "auto")
     }, deleteFile=TRUE)
+    
   })
 }
