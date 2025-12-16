@@ -10,37 +10,43 @@ Cette application Shiny permet d'analyser des données de température mesurées
 Le projet se structure de la manière suivante : 
 ```text
 EcoForum/
-├── batiments/                  # Contient les données géographiques des bâtiments et les scripts associés
-│   ├── Controle.R              # Script de contrôle/validation des données bâtiments      
-│   ├── batiments.geojson       # Géométrie finale utilisée pour l’interpolation (interp.R)
-│   ├── batiments_raw2.geojson  # Fichier brut avant nettoyage
-│   └── nettoyage_geoson.R      # Script de nettoyage et préparation du geojson
-│ 
-├── data/                       # Données du projet
-│   ├── derived-data/           # Données recalibrées
-│   ├── images/                 # Cartes générées 
-│   └── raw-data/               # Données brutes 
+├── data/ 
+|   ├── batiments/                      # Contient les données géographiques des bâtiments et les scripts associés
+│   │       ├── Controle.R              # Script de contrôle/validation des données bâtiments      
+│   │       ├── batiments.geojson       # Géométrie finale utilisée pour l’interpolation (interp.R)
+│   │       ├── batiments_raw2.geojson  # Fichier brut avant nettoyage
+│   │       └── nettoyage_geojson.R     # Script de nettoyage et préparation du geojson
+│   │                      
+│   ├── derived-data/                   # Données recalibrées
+│   ├── images/                         # Cartes générées par le script interp.R
+│   ├── new-csv/                        # Nouvelles données brutes à prétraiter  
+│   └── raw-data/                       # Données brutes 
 │
-├── docu/                       # Documentation et archives
-│   ├── analyses/               # Archives : anciens codes R
-│   ├── figures/                # Archives : fichiers images du calibrage des capteurs
-│   └── notices/                # Diverses notices sur l'utilisation de l'application et d'HOBO
+├── docu/                               # Documentation et archives
+│   ├── analyses/                       # Archives : anciens codes R
+│   ├── figures/                        # Archives : fichiers images du calibrage des capteurs
+│   ├── notices/                        # Diverses notices sur l'utilisation de l'application et d'HOBO
+│   ├── documentation_files/libs/       # Fichiers annexes à la documentation complète                      
+│   ├── Lien vers map capteurs.docx     # Lien vers la carte interactive des capteurs
+│   ├── Plan-capteurs-HOBO.pdf          # Plan des capteurs sur le site
+│   ├── documentation.html              # Documentation complète de l'application       
+│   └── documentation.md                # Version markdown de la documentation complète de l'application        
 │
-└── src/                            # Code source de l'application
-    ├── app.R                       # Lanceur de l'application
-    ├── server.R                    # Logique serveur (back-end)
-    ├── global.R                    # Palette Okabe–Ito (daltoniens)
-    ├── ui.R                        # Interface utilisateur (front-end)
-    └── R/                          # Modules et fonctions (chargés automatiquement)
-        ├── interp.R                # Script de génération automatique des cartes interpolées
-        ├── pretraitement-new-csv.R # Script qui réalise le prétraitement des nouvelles données des capteurs        
-        ├── mod_analyse.R           # Module : décomposition d'une série temporelle
-        ├── mod_data.R              # Gestion des données
-        ├── mod_map.R               # Module : cartes interpolées
-        ├── mod_newsection.R        # Module : nouvelle section
-        ├── mod_serietemp.R         # Module : séries temporelles
-        ├── mod_stats.R             # Module : statistiques (Boxplots)
-        └── mod_summary.R           # Module : tableau récapitulatif
+├── src/                                # Code source de l'application
+│    ├── app.R                          # Lanceur de l'application
+│    ├── server.R                       # Logique serveur (back-end)
+│    ├── global.R                       # Palette Okabe–Ito (daltoniens)
+│    ├── ui.R                           # Interface utilisateur (front-end)
+│    └── R/                             # Modules et fonctions (chargés automatiquement)
+│        ├── interp.R                   # Script de génération automatique des cartes interpolées
+│        ├── pretraitement-new-csv.R    # Script qui réalise le prétraitement des nouvelles données des capteurs        
+│        ├── mod_analyse.R              # Module : décomposition d'une série temporelle
+│        ├── mod_data.R                 # Gestion des données
+│        ├── mod_map.R                  # Module : cartes interpolées
+│        ├── mod_newsection.R           # Module : nouvelle section
+│        ├── mod_serietemp.R            # Module : séries temporelles
+│        └── mod_stats.R                # Module : statistiques (Boxplots)
+└── tests/                              # Dossiers de tests
 ```
 ---
 ## Préparation des données : génération des cartes 
