@@ -67,6 +67,21 @@ analyseServer <- function(id, data, variable_name = reactive("temp.corr")) {
           need(FALSE, "Erreur STL : fréquence incompatible ou série trop courte.")
         )
       }
+###################### Décomposition avec la méthode decompose ##############################
+      # decomp_classic <- try(stats::decompose(ts_obj, type = "additive"),silent = TRUE)
+      # if (!inherits(decomp_classic, "try-error")) {
+      #   trend_classic <- as.numeric(decomp_classic$trend)
+      #   seasonal_classic <- as.numeric(decomp_classic$seasonal)
+      #   remainder_classic <- as.numeric(decomp_classic$random)
+      # }
+      # df_plot_classic <- data.table(
+      #   Date = dt$time_unit,
+      #   Brutes = as.numeric(ts_obj),
+      #   Tendance = trend_classic,
+      #   Saisonnalité = seasonal_classic,
+      #   Résidus = remainder_classic
+      # )
+#############################################################################################      
       residus <- as.numeric(decomp$time.series[, "remainder"])
       mean_res <- mean(residus, na.rm = TRUE)
       # On formate le chiffre pour qu'il soit joli (ex: 2.4e-16)
