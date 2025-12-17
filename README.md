@@ -11,11 +11,9 @@ Le projet se structure de la manière suivante :
 ```text
 EcoForum/
 ├── data/ 
-│   ├── batiments/                      # Contient les données géographiques des bâtiments et les scripts associés
-│   │       ├── Controle.R              # Script de contrôle/validation des données des bâtiments      
+│   ├── batiments/                      # Contient les données géographiques des bâtiments et les scripts associés      
 │   │       ├── batiments.geojson       # Géométrie finale utilisée pour l’interpolation (interp.R)
-│   │       ├── batiments_raw2.geojson  # Fichier brut avant nettoyage
-│   │       └── nettoyage_geojson.R     # Script de nettoyage et préparation du geojson
+│   │       └── batiments_raw2.geojson  # Fichier brut avant nettoyage
 │   │                      
 │   ├── derived-data/                   # Dossier contenant les jeux de données dérivés après traitement, correction et calibration
 │   ├── images/                         # Dossier contenant les cartes interpolées générées par le script interp.R
@@ -45,7 +43,8 @@ EcoForum/
 │        ├── mod_map.R                  # Module : cartes interpolées
 │        ├── mod_newsection.R           # Module : nouvelle section
 │        ├── mod_serietemp.R            # Module : graphique interactif de l'évolution temporelle d'une variable par capteur
-│        └── mod_stats.R                # Module : Boxplots
+│        ├── mod_stats.R                # Module : Boxplots
+│        └── nettoyage_geojson.R        # Script de nettoyage et préparation du geojson des bâtiments
 └── tests/                              # Dossier "tests"
 ```
 ---
