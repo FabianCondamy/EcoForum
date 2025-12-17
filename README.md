@@ -11,20 +11,20 @@ Le projet se structure de la manière suivante :
 ```text
 EcoForum/
 ├── data/ 
-|   ├── batiments/                      # Contient les données géographiques des bâtiments et les scripts associés
-│   │       ├── Controle.R              # Script de contrôle/validation des données bâtiments      
+│   ├── batiments/                      # Contient les données géographiques des bâtiments et les scripts associés
+│   │       ├── Controle.R              # Script de contrôle/validation des données des bâtiments      
 │   │       ├── batiments.geojson       # Géométrie finale utilisée pour l’interpolation (interp.R)
 │   │       ├── batiments_raw2.geojson  # Fichier brut avant nettoyage
 │   │       └── nettoyage_geojson.R     # Script de nettoyage et préparation du geojson
 │   │                      
-│   ├── derived-data/                   # Données recalibrées
-│   ├── images/                         # Cartes générées par le script interp.R
-│   ├── new-csv/                        # Nouvelles données brutes à prétraiter  
-│   └── raw-data/                       # Données brutes 
+│   ├── derived-data/                   # Dossier contenant les jeux de données dérivés après traitement, correction et calibration
+│   ├── images/                         # Dossier contenant les cartes interpolées générées par le script interp.R
+│   ├── new-csv/                        # Dossier de nouvelles données brutes à prétraiter   
+│   └── raw-data/                       # Dossier regroupant l’ensemble des données brutes non traitées 
 │
 ├── docu/                               # Documentation et archives
-│   ├── analyses/                       # Archives : anciens codes R
-│   ├── figures/                        # Archives : fichiers images du calibrage des capteurs
+│   ├── analyses/                       # Dossier archives : anciens codes R
+│   ├── figures/                        # Dossier archives : fichiers images du calibrage des capteurs
 │   ├── notices/                        # Diverses notices sur l'utilisation de l'application et d'HOBO
 │   ├── documentation_files/libs/       # Fichiers annexes à la documentation complète                      
 │   ├── Lien vers map capteurs.docx     # Lien vers la carte interactive des capteurs
@@ -37,16 +37,16 @@ EcoForum/
 │    ├── server.R                       # Logique serveur (back-end)
 │    ├── global.R                       # Palette Okabe–Ito (daltoniens)
 │    ├── ui.R                           # Interface utilisateur (front-end)
-│    └── R/                             # Modules et fonctions (chargés automatiquement)
+│    └── R/                             # Dossier des différents modules et scripts R
 │        ├── interp.R                   # Script de génération automatique des cartes interpolées
-│        ├── pretraitement-new-csv.R    # Script qui réalise le prétraitement des nouvelles données des capteurs        
-│        ├── mod_analyse.R              # Module : décomposition d'une série temporelle
-│        ├── mod_data.R                 # Gestion des données
+│        ├── pretraitement-new-csv.R    # Script de prétraitement des nouveaux fichiers de données des capteurs       
+│        ├── mod_analyse.R              # Module : séries temporelles
+│        ├── mod_data.R                 # Module : préparation des données
 │        ├── mod_map.R                  # Module : cartes interpolées
 │        ├── mod_newsection.R           # Module : nouvelle section
-│        ├── mod_serietemp.R            # Module : séries temporelles
-│        └── mod_stats.R                # Module : statistiques (Boxplots)
-└── tests/                              # Dossiers de tests
+│        ├── mod_serietemp.R            # Module : graphique interactif de l'évolution temporelle d'une variable par capteur
+│        └── mod_stats.R                # Module : Boxplots
+└── tests/                              # Dossier "tests"
 ```
 ---
 ## Préparation des données : génération des cartes 
