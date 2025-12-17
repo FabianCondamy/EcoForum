@@ -43,7 +43,8 @@ EcoForum/
 │        ├── mod_map.R                  # Module : cartes interpolées
 │        ├── mod_newsection.R           # Module : nouvelle section
 │        ├── mod_serietemp.R            # Module : graphique interactif de l'évolution temporelle d'une variable par capteur
-│        ├── mod_stats.R                # Module : Boxplots
+│        ├── mod_stats.R                # Module : boxplots
+│        ├── mod_summary.R              # Module : résumé statistique
 │        └── nettoyage_geojson.R        # Script de nettoyage et préparation du geojson des bâtiments
 └── tests/                              # Dossier "tests"
 ```

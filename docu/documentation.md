@@ -19,13 +19,14 @@ L'application est structurée autour d'un fichier **app.R** composé d'une inter
 ├── R/                                              # dossier des différents modules Shiny
 │   ├── interp.R                                    # script de génération automatique des cartes interpolées
 │   ├── pretraitement-new-csv.R                     # script de prétraitement des nouveaux fichiers de données des capteurs
-│   ├── mod_analyse.R                               # module d'analyse des données
+│   ├── mod_analyse.R                               # module de série temporelle
 │   ├── mod_data.R                                  # module de préparation des données
-│   ├── mod_serietemp.R                             # module des séries temporelles
-│   ├── mod_map.R                                   # module des cartes spatiales
+│   ├── mod_serietemp.R                             # module du graphique interactif de l'évolution temporelle d'une variable par capteur
+│   ├── mod_map.R                                   # module des cartes interpolées
 │   ├── mod_stats.R                                 # module des statistiques générales et des boxplots
 │   ├── mod_summary.R                               # module du résumé statistique
-│   └── mod_newsection.R                            # module vierge pour futures fonctionnalités
+│   ├── mod_newsection.R                            # module vierge pour futures fonctionnalités
+│   └── nettoyage_geoson.R                          # script de nettoyage et préparation du geojson des bâtiments
 ├── rsconnect/shinyapps.io/ecoforum/shiny_app.dcf   # fichiers de déploiement ShinyApps.io
 ├── www/                                            # dossier des ressources web
 │    └── style.css                                  # feuille de style CSS personnalisée
@@ -163,7 +164,6 @@ Le dossier data à vocation d'accueillir l'ensemble des fichiers de données uti
 ```data/
 .
 ├── batiments/
-│   ├── Controle.R                  # module Shiny gérant l'affichage et la validation des bâtiments dans l'application
 │   ├── Readme.rm                   # fichier README décrivant le contenu et l'organisation du dossier batiments
 │   ├── batiments.geojson           # fichier geojson des bâtiments du campus après traitement et nettoyage
 │   ├── batiments_raw2.geojson      # fichier geojson brut des bâtiments du campus (données sources non traitées)
