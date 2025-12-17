@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.6.40">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -64,10 +64,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="documentation_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="documentation_files/libs/quarto-html/anchor.min.js"></script>
 <link href="documentation_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="documentation_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="documentation_files/libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="documentation_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="documentation_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="documentation_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="documentation_files/libs/bootstrap/bootstrap-8a79a254b8e706d3c925cde0a310d4f0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
 
 </head>
@@ -113,8 +113,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>2. Structure générale de l’application (dossier src)</h1>
 <pre class="src/"><code>.
 ├── R/                                              # dossier des différents modules Shiny
-|   ├── mod_analyse.R       
-│   ├── mod_data.R                                  # préparation des données
+│   ├── interp.R                                    # script de génération automatique des cartes interpolées
+│   ├── pretraitement-new-csv.R                     # script de prétraitement des nouveaux fichiers de données des capteurs
+│   ├── mod_analyse.R                               # module d'analyse des données
+│   ├── mod_data.R                                  # module de préparation des données
 │   ├── mod_serietemp.R                             # module des séries temporelles
 │   ├── mod_map.R                                   # module des cartes spatiales
 │   ├── mod_stats.R                                 # module des statistiques générales et des boxplots
@@ -128,8 +130,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 ├── server.R                                        # fichier serveur de l'application (back)
 └── ui.R                                            # fichier UI de l'application (front)</code></pre>
 </section>
-<section id="contenu-du-fichier-app.r" class="level1">
-<h1>3. Contenu du fichier <code>app.R</code></h1>
+<section id="contenu-plus-détaillé-de-lapplication" class="level1">
+<h1>3. Contenu plus détaillé de l’application</h1>
 <section id="interface-utilisateur-ui.r" class="level2">
 <h2 class="anchored" data-anchor-id="interface-utilisateur-ui.r">3.1 Interface utilisateur (<code>ui.R</code>)</h2>
 <p>L’interface contient :</p>
@@ -188,7 +190,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="feuille-de-style-style.css" class="level1">
 <h1>3.4 Feuille de style <code>style.css</code></h1>
-<p>Personnalisation des onglets, panels, boutons et balises <code>&lt;details&gt;</code>.</p>
+<p>Ce fichier permet la personnalisation des onglets, panels, boutons et balises <code>&lt;details&gt;</code>.</p>
 </section>
 <section id="différents-modules-de-lapplication-shiny" class="level1">
 <h1>4. Différents modules de l’application Shiny</h1>
@@ -220,6 +222,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>la conversion de la DOY en date réelle</li>
 <li>l’affichage d’une image légendée avec un slider permettant de sélectionner la date voulue</li>
 </ul>
+<p>Grâce à ce fichier, il est possible de mettre à jour l’application pour de nouvelles données. Pour ceci, suivez les étapes décrite plus bas au point #9.</p>
 </section>
 <section id="mod_newsection.r" class="level2">
 <h2 class="anchored" data-anchor-id="mod_newsection.r">4.4 <code>mod_newsection.R</code></h2>
@@ -258,44 +261,69 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>l’affichage d’une section repliable d’explications sur les données</li>
 </ul>
 </section>
-<section id="compilation-calibration-data.r" class="level2">
-<h2 class="anchored" data-anchor-id="compilation-calibration-data.r">4.8 <code>compilation-calibration-data.R</code></h2>
+<section id="interp.r" class="level2">
+<h2 class="anchored" data-anchor-id="interp.r">4.8 <code>interp.R</code></h2>
+<p>Ce code gère la génération des différentes cartes par la méthode du krigeage ordinaire ainsi qu’une fonction <code>verif()</code> qui permet de vérifier si des cartes sont manquantes.</p>
+</section>
+<section id="pretraitement-new-csv.r" class="level2">
+<h2 class="anchored" data-anchor-id="pretraitement-new-csv.r">4.9 <code>pretraitement-new-csv.R</code></h2>
+<p>Ce fichier permet le prétraitement des nouveaux fichiers de données des différents capteurs pour qu’ils soient ensuite traités par le module <code>mod_data.R</code>. Plus en détail, il réalise :</p>
+<ul>
+<li>la suppression des colonnes inutiles du fichier csv</li>
+<li>la conversion du csv en xlsx</li>
+<li>le formatage des colonnes en bons types</li>
+</ul>
 </section>
 </section>
 <section id="structure-générale-du-dossier-data" class="level1">
 <h1>5. Structure générale du dossier data</h1>
 <p>Le dossier data à vocation d’accueillir l’ensemble des fichiers de données utilisés ensuite dans les codes du dossier src qui construisent l’application.</p>
 <pre class="data/"><code>.
-├── derived-data/                   # dossier contenant les fichiers de données traités et recalibrés
-│   ├── 250703.csv                  # 
-│   ├── 250703_corr.csv             #
-│   ├── correction.csv              #
-│   └── data.calibr.csv             # jeu de données de calibration des capteurs
-├── raw-data/                       # fichiers de données brutes    
-│   ├── 250703/                     # données brutes récoltées sur les capteurs 
-│       ├── (n°02)                  # fichier de données du premier capteur (n°2)
-│       ├──  ...                    # fichiers de données des autres capteurs
-│       └── (n°38)                  # fichier de données du dernier capteur (n°38) 
-│   ├── new-csv/                    # dossier vide dédié à l'accueil de nouvelles données
-│   ├── data.terrain.corrige.csv    # 
-│   ├── habitat.csv                 # jeu de données rendant compte du type d'habitat dans lequel les capteurs sont positionnés 
-│   ├── listing-HOBO.xlsx           # jeu de données contenant les informations sur les capteurs (coordonnées, modèle, numéro de série)
-│   ├── map.osm                     # carte openstreetmap
-│   └── temp_ref.csv                # jeu de données contenant les températures de référence sur le campus prises toutes les demi-heures</code></pre>
+├── batiments/
+│   ├── Controle.R                  # module Shiny gérant l'affichage et la validation des bâtiments dans l'application
+│   ├── Readme.rm                   # fichier README décrivant le contenu et l'organisation du dossier batiments
+│   ├── batiments.geojson           # fichier geojson des bâtiments du campus après traitement et nettoyage
+│   ├── batiments_raw2.geojson      # fichier geojson brut des bâtiments du campus (données sources non traitées)
+│   └── nettoyage_geoson.R          # script R assurant le nettoyage, la simplification et la mise en forme du geojson
+├── derived-data/                   # dossier contenant les jeux de données dérivés après traitement, correction et calibration
+│   ├── new-data.csv                # jeu de données compilé à partir des données brutes de l’ensemble des capteurs
+│   ├── new-data_corr.csv           # jeu de données compilé et corrigé à l’aide des coefficients de calibration
+│   ├── data.terrain.csv            # données collectées directement sur le terrain lors des campagnes de mesures
+│   ├── correction.csv              # coefficients de correction à appliquer à chaque capteur pour la calibration
+│   └── data.calibr.csv             # jeu de données utilisé spécifiquement pour la calibration des capteurs
+├── images/                         # dossier contenant les cartes interpolées
+├── raw-data/                       # dossier regroupant l’ensemble des données brutes non traitées
+│   ├── new-data/                   # dernières données brutes récoltées directement depuis les capteurs
+│   │   ├── (n°02)                  # données brutes issues du capteur n°02
+│   │   ├──  ...                    # données brutes issues des autres capteurs
+│   │   └── (n°38)                  # données brutes issues du capteur n°38
+│   ├── data.terrain.corrige.csv    # données terrain accompagnées des corrections nécessaires aux capteurs
+│   ├── habitat.csv                 # informations sur le type d’habitat ou d’environnement d’implantation des capteurs
+│   ├── Listing-HOBO.xlsx           # métadonnées des capteurs (coordonnées, modèle, numéro de série, etc.)
+│   ├── map.osm                     # fond de carte OpenStreetMap utilisé pour la cartographie
+│   └── temp_ref.csv                # températures de référence mesurées sur le campus toutes les 30 minutes
+├── new-csv/                        # dossier dédié à l’intégration de nouvelles données unitaires
+│   └── data_one_sensor.csv         # fichier de données brutes ou prétraitées provenant d’un capteur unique</code></pre>
 </section>
 <section id="structure-générale-du-dossier-docu" class="level1">
 <h1>6. Structure générale du dossier docu</h1>
 <p>Ce dossier contient l’ensemble des notices qui permettent de comprendre le projet et ses différents codes.</p>
 <pre class="docu/"><code>.
-├── figures/                                  #
+├── analyses/                                 # dossier contenant la première version de l'application Shiny
+│   ├── 1-compilation-donnees.R               # script R dédié à la compilation et à l’agrégation des données brutes
+│   ├── 2-calibration.R                       # script R assurant la calibration des capteurs à partir des données de référence
+│   └── Triolet_temperature_plotting.R        # script R permettant la visualisation et l’analyse des températures sur le site du Triolet
+├── documentation_files/libs
+├── figures/                                  # dossier contenant diverses images concernant la calibration des capteurs et la carte des capteurs
 │   ├── fig-calibration/                      # dossier contenant diverses images concernant la calibration des capteurs
-│       ├── data.calib.corr.png               # graphique rendant compte des températures mesurées en continu par chaque capteur dans l’étuve lors de la calibration
-│       ├── data.calib.moy.png                # graphique rendant compte des températures moyennes mesurées par chaque capteur dans l’étuve lors de la calibration
-│       └── data.calib.png                    # zoom du premier graphique
-│   └── sensor_map                            #
+│   │   ├── data.calib.corr.png               # graphique rendant compte des températures mesurées en continu par chaque capteur dans l’étuve lors de la calibration
+│   │   ├── data.calib.moy.png                # graphique rendant compte des températures moyennes mesurées par chaque capteur dans l’étuve lors de la calibration
+│   │   └── data.calib.png                    # zoom du premier graphique
+│   └── sensor_map                            
 ├── notices/                                  
 │   ├── Notice_utilisation_HOBO-MX2203.docx   # notice décrivant l'utilisation de l'application HOBO-connect qui permet de relever les données sur les capteurs sur le terrain
 │   └── Notice-analyse-donnees-HAV454H.docx   # notice concernant le travail du groupe précédent
+├── documentation.html                        # version HTML de la documentation
 ├── documentation.md                          # ensemble de la documentation
 ├── Lien vers map capteurs.docx               # fichier docx renvoyant à la carte des capteurs sur le campus
 └── Plan-capteur-HOBO.pdf                     # fichier pdf rendant compte de l'emplacement des capteurs</code></pre>
@@ -391,29 +419,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>new_packages <span class="ot">&lt;-</span> required_packages[<span class="sc">!</span>(required_packages <span class="sc">%in%</span> <span class="fu">installed.packages</span>()[,<span class="st">"Package"</span>])]</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">length</span>(new_packages)) <span class="fu">install.packages</span>(new_packages)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
+<section id="génération-des-cartes" class="level1">
+<h1>8. Génération des cartes</h1>
+<p>Avant de lancer l’application Shiny, il est indispensable d’exécuter le script interp.R (situé dans src/R/). Ce script génère l’ensemble des cartes interpolées nécessaires au fonctionnement de la section cartographique. Les cartes sont automatiquement enregistrées dans le dossier data/images/.</p>
+<p><strong>Durée d’exécution</strong></p>
+<p>Avec les données actuelles, le script met environ 2 heures à s’exécuter. Si davantage de données sont ajoutées à l’avenir, le temps d’exécution augmentera proportionnellement.</p>
+<p>Pour lancer ce script, ouvrir <code>interp.R</code> dans RStudio et exécuter l’intégralité du fichier.</p>
+</section>
 <section id="lancer-lapplication-shiny" class="level1">
-<h1>8. Lancer l’application Shiny</h1>
+<h1>9. Lancer l’application Shiny</h1>
 <p>Directement via R :</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Positionnez-vous dans le dossier app</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">"src/app.R"</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Lancer l'application</span></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>shiny<span class="sc">::</span><span class="fu">runApp</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Ou avec le bouton “Run App” dans RStudio (toujours dans le fichier app.R).</p>
+<p>Ou avec le bouton “Run App” dans RStudio (en étant positionné dans le fichier <code>app.R</code>).</p>
+<p><strong>Note technique</strong> : les fichiers dans <code>src/R/</code> sont chargés automatiquement par Shiny au lancement, il n’est donc pas nécessaire de les sourcer manuellement (source()) dans <code>app.R</code>.</p>
+<p><strong>Note technique n°2</strong> : lorsque l’on modifie la période et/ou les capteurs sélectionnés pour visualiser ce que l’on souhaite dans les différents onglets, il est parfois nécessaire de cliquer deux fois sur le bouton de mise à jour pour que les changements soient correctement pris en compte.</p>
 </section>
 <section id="notice-concernant-lajout-de-nouvelles-données" class="level1">
-<h1>9. Notice concernant l’ajout de nouvelles données</h1>
+<h1>10. Notice concernant l’ajout de nouvelles données</h1>
 <p>Pour ajouter de nouvelles données et continuer d’utiliser l’application :</p>
 <ol type="1">
 <li>Commencer par prélever les données des différents capteurs sur le terrain en se référant au fichier Notice_utilisation_HOBO-MX2203.docx disponible dans le sous-dossier notices de docu</li>
-<li>Déposer les fichiers de données des différents capteurs en suivant le chemin suivant : data-data-csv<br>
+<li>Déposer les fichiers de données des différents capteurs en suivant le chemin suivant : data-csv<br>
 </li>
-<li>Lancer le fichier compilation-calibration-data.R disponible dans le dossier src</li>
-<li>Suivre les étapes du point précédent pour lancer l’application avec les nouvelles données</li>
+<li>Nommer correctement les fichiers, ils doivent commencer par “(n°XX)” où XX est le numéro du capteur</li>
+<li>Compiler ensuite le fichier <code>pretraitement-new-csv.R</code> disponible dans src</li>
+<li>Aller dans le dossier data-data et déplacer les fichiers dans le sous-dossier new-data en supprimant l’ancienne version du fichier pour chaque capteur mis à jour</li>
 </ol>
+<p><strong>NB</strong> : pour le moment, il est nécessaire de récupérer les données de l’ensemble des capteurs afin d’éviter tout dysfonctionnement de l’application.</p>
 </section>
 <section id="fonctionnement-général-de-lapplication" class="level1">
-<h1>10. Fonctionnement général de l’application</h1>
+<h1>11. Fonctionnement général de l’application</h1>
 <ol type="1">
 <li>Choisir variable, années, capteurs, DOY, heures<br>
 </li>
@@ -508,8 +547,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -620,7 +657,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {

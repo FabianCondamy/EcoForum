@@ -17,9 +17,9 @@ L'application est structurée autour d'un fichier **app.R** composé d'une inter
 ```src/
 .
 ├── R/                                              # dossier des différents modules Shiny
-|   ├── interp.R                                    # script de génération automatique des cartes interpolées
-|   ├── pretraitement-new-csv.R                     # script de prétraitement des nouveaux fichiers de données des capteurs
-|   ├── mod_analyse.R                               # module d'analyse des données
+│   ├── interp.R                                    # script de génération automatique des cartes interpolées
+│   ├── pretraitement-new-csv.R                     # script de prétraitement des nouveaux fichiers de données des capteurs
+│   ├── mod_analyse.R                               # module d'analyse des données
 │   ├── mod_data.R                                  # module de préparation des données
 │   ├── mod_serietemp.R                             # module des séries temporelles
 │   ├── mod_map.R                                   # module des cartes spatiales
@@ -145,7 +145,7 @@ Ce module Shiny affiche un ensemble de statistiques descriptives par capteur, ai
 
 ## 4.8 `interp.R`
 
-Ce code gère la génération des différentes cartes par la méthode du krigeage ordinaire.
+Ce code gère la génération des différentes cartes par la méthode du krigeage ordinaire ainsi qu’une fonction `verif()` qui permet de vérifier si des cartes sont manquantes.
 
 ## 4.9 `pretraitement-new-csv.R`
 
@@ -162,24 +162,32 @@ Le dossier data à vocation d'accueillir l'ensemble des fichiers de données uti
 
 ```data/
 .
-├── derived-data/                   # dossier contenant les fichiers de données traités et recalibrés
-│   ├── new-data.csv                # fichier obtenu après compilation
-│   ├── new-data_corr.csv           # fichier obtenu après compilation/calibration
-│   ├── correction.csv              # fichier représentant la correction à appliquer à chaque capteur pour les calibrer
-│   └── data.calibr.csv             # jeu de données de calibration des capteurs
-├── raw-data/                       # fichiers de données brutes    
-│   ├── new-data/                   # dernières données brutes récoltées sur les capteurs 
-│       ├── (n°02)                  # fichier de données du premier capteur (n°2)
-│       ├──  ...                    # fichiers de données des autres capteurs
-│       └── (n°38)                  # fichier de données du dernier capteur (n°38) 
-│   ├── new-csv/                    # dossier vide dédié à l'accueil de nouvelles données
-│   ├── data.terrain.corrige.csv    # fichier contenant les données sur le terrain et les corrections à appliquer aux capteurs
-│   ├── habitat.csv                 # jeu de données rendant compte du type d'habitat dans lequel les capteurs sont positionnés 
-│   ├── listing-HOBO.xlsx           # jeu de données contenant les informations sur les capteurs (coordonnées, modèle, numéro de série)
-│   ├── map.osm                     # carte openstreetmap
-│   └── temp_ref.csv                # jeu de données contenant les températures de référence sur le campus prises toutes les demi-heures
+├── batiments/
+│   ├── Controle.R                  # module Shiny gérant l'affichage et la validation des bâtiments dans l'application
+│   ├── Readme.rm                   # fichier README décrivant le contenu et l'organisation du dossier batiments
+│   ├── batiments.geojson           # fichier geojson des bâtiments du campus après traitement et nettoyage
+│   ├── batiments_raw2.geojson      # fichier geojson brut des bâtiments du campus (données sources non traitées)
+│   └── nettoyage_geoson.R          # script R assurant le nettoyage, la simplification et la mise en forme du geojson
+├── derived-data/                   # dossier contenant les jeux de données dérivés après traitement, correction et calibration
+│   ├── new-data.csv                # jeu de données compilé à partir des données brutes de l’ensemble des capteurs
+│   ├── new-data_corr.csv           # jeu de données compilé et corrigé à l’aide des coefficients de calibration
+│   ├── data.terrain.csv            # données collectées directement sur le terrain lors des campagnes de mesures
+│   ├── correction.csv              # coefficients de correction à appliquer à chaque capteur pour la calibration
+│   └── data.calibr.csv             # jeu de données utilisé spécifiquement pour la calibration des capteurs
+├── images/                         # dossier contenant les cartes interpolées
+├── raw-data/                       # dossier regroupant l’ensemble des données brutes non traitées
+│   ├── new-data/                   # dernières données brutes récoltées directement depuis les capteurs
+│   │   ├── (n°02)                  # données brutes issues du capteur n°02
+│   │   ├──  ...                    # données brutes issues des autres capteurs
+│   │   └── (n°38)                  # données brutes issues du capteur n°38
+│   ├── data.terrain.corrige.csv    # données terrain accompagnées des corrections nécessaires aux capteurs
+│   ├── habitat.csv                 # informations sur le type d’habitat ou d’environnement d’implantation des capteurs
+│   ├── Listing-HOBO.xlsx           # métadonnées des capteurs (coordonnées, modèle, numéro de série, etc.)
+│   ├── map.osm                     # fond de carte OpenStreetMap utilisé pour la cartographie
+│   └── temp_ref.csv                # températures de référence mesurées sur le campus toutes les 30 minutes
+├── new-csv/                        # dossier dédié à l’intégration de nouvelles données unitaires
+│   └── data_one_sensor.csv         # fichier de données brutes ou prétraitées provenant d’un capteur unique
 ```
-
 
 # 6. Structure générale du dossier docu
 
@@ -187,31 +195,27 @@ Ce dossier contient l'ensemble des notices qui permettent de comprendre le proje
 
 ```docu/
 .
+├── analyses/                                 # dossier contenant la première version de l'application Shiny
+│   ├── 1-compilation-donnees.R               # script R dédié à la compilation et à l’agrégation des données brutes
+│   ├── 2-calibration.R                       # script R assurant la calibration des capteurs à partir des données de référence
+│   └── Triolet_temperature_plotting.R        # script R permettant la visualisation et l’analyse des températures sur le site du Triolet
+├── documentation_files/libs
 ├── figures/                                  # dossier contenant diverses images concernant la calibration des capteurs et la carte des capteurs
 │   ├── fig-calibration/                      # dossier contenant diverses images concernant la calibration des capteurs
-│       ├── data.calib.corr.png               # graphique rendant compte des températures mesurées en continu par chaque capteur dans l’étuve lors de la calibration
-│       ├── data.calib.moy.png                # graphique rendant compte des températures moyennes mesurées par chaque capteur dans l’étuve lors de la calibration
-│       └── data.calib.png                    # zoom du premier graphique
-│   └── sensor_map                            #
+│   │   ├── data.calib.corr.png               # graphique rendant compte des températures mesurées en continu par chaque capteur dans l’étuve lors de la calibration
+│   │   ├── data.calib.moy.png                # graphique rendant compte des températures moyennes mesurées par chaque capteur dans l’étuve lors de la calibration
+│   │   └── data.calib.png                    # zoom du premier graphique
+│   └── sensor_map                            
 ├── notices/                                  
 │   ├── Notice_utilisation_HOBO-MX2203.docx   # notice décrivant l'utilisation de l'application HOBO-connect qui permet de relever les données sur les capteurs sur le terrain
 │   └── Notice-analyse-donnees-HAV454H.docx   # notice concernant le travail du groupe précédent
+├── documentation.html                        # version HTML de la documentation
 ├── documentation.md                          # ensemble de la documentation
 ├── Lien vers map capteurs.docx               # fichier docx renvoyant à la carte des capteurs sur le campus
 └── Plan-capteur-HOBO.pdf                     # fichier pdf rendant compte de l'emplacement des capteurs
 ```
 
-# 7. Structure générale du dossier batiments
-
-```batiments/
-.
-├── Controle.R               # module Shiny gérant l'affichage et la validation des bâtiments dans l'application
-├── batiments.geojson        # fichier de données geojson concernant les divers bâtiments présents au sein du campus utilisé après traitement    
-├── batiments_raw2.geojson   # fichier de données geojson brutes concernant les divers bâtiments présents au sein du campus    
-└── nettoyage_geoson.R       # code R gérant le traitement et nettoyage du geojson des bâtiments
-```
-
-# 8. Packages R requis pour le projet
+# 7. Packages R requis pour le projet
 
 Avant de lancer l'application, assurez-vous que les packages suivants sont installés :
 
@@ -244,6 +248,15 @@ new_packages <- required_packages[!(required_packages %in% installed.packages()[
 if(length(new_packages)) install.packages(new_packages)
 ```
 
+# 8. Génération des cartes 
+
+Avant de lancer l'application Shiny, il est indispensable d'exécuter le script interp.R (situé dans src/R/). Ce script génère l'ensemble des cartes interpolées nécessaires au fonctionnement de la section cartographique. Les cartes sont automatiquement enregistrées dans le dossier data/images/.
+
+**Durée d’exécution**
+
+Avec les données actuelles, le script met environ 2 heures à s'exécuter. Si davantage de données sont ajoutées à l'avenir, le temps d'exécution augmentera proportionnellement.
+
+Pour lancer ce script, ouvrir `interp.R` dans RStudio et exécuter l'intégralité du fichier.
 
 # 9. Lancer l'application Shiny
 
@@ -257,10 +270,11 @@ setwd("src/app.R")
 shiny::runApp()
 
 ```
-Ou avec le bouton "Run App" dans RStudio (toujours dans le fichier app.R).
+Ou avec le bouton "Run App" dans RStudio (en étant positionné dans le fichier `app.R`).
 
 **Note technique** : les fichiers dans `src/R/` sont chargés automatiquement par Shiny au lancement, il n'est donc pas nécessaire de les sourcer manuellement (source()) dans `app.R`.
-**Note technique n°2** : lorsque l'on change la période et/ou les capteurs sélectionnés pour visualiser ce que l'on souhaite dans les différents onglets, il est parfois nécessaire de cliquer deux fois sur le bouton de mise à jour pour que cela fonctionne correctement.
+
+**Note technique n°2** : lorsque l'on modifie la période et/ou les capteurs sélectionnés pour visualiser ce que l'on souhaite dans les différents onglets, il est parfois nécessaire de cliquer deux fois sur le bouton de mise à jour pour que les changements soient correctement pris en compte.
 
 # 10. Notice concernant l'ajout de nouvelles données 
 
@@ -272,7 +286,7 @@ Pour ajouter de nouvelles données et continuer d'utiliser l'application :
 4. Compiler ensuite le fichier `pretraitement-new-csv.R` disponible dans src\R
 5. Aller dans le dossier data\raw-data et déplacer les fichiers dans le sous-dossier new-data en supprimant l'ancienne version du fichier pour chaque capteur mis à jour
 
-**NB** : il est nécessaire de récupérer les données sur l'ensemble des capteurs pour éviter un quelconque bug pour l'instant.
+**NB** : pour le moment, il est nécessaire de récupérer les données de l'ensemble des capteurs afin d'éviter tout dysfonctionnement de l'application.
 
 # 11. Fonctionnement général de l'application
 
