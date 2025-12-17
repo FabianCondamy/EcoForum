@@ -6,7 +6,7 @@ library(sf)
 library(dplyr)
 
 # Charger le fichier brut
-batiments <- st_read("batiments_raw2.geojson")
+batiments <- st_read("../data/batiments/batiments_raw2.geojson")
 
 # Garder uniquement les polygones
 batiments_poly <- batiments %>%
@@ -20,4 +20,4 @@ batiments_univ <- batiments_poly %>%
 
 
 # Sauvegarder le fichier nettoyé
-st_write(batiments_univ, "batiments.geojson", delete_dsn = TRUE)
+st_write(batiments_univ, "../data/batiments/batiments.geojson", delete_dsn = TRUE)
