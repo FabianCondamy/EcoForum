@@ -54,7 +54,7 @@ L'interface contient :
     - **Exporter données** : exporte les données filtrées en CSV  
 
 * **mainPanel** :
-  - `tabsetPanel` : Température vs DOY, Boxplots, Carte des zones, Résumé statistique, Section vierge  
+  - `tabsetPanel` : Température vs DOY, Boxplots, Résumé statistique, Analyse, Cartes, Section vierge  
   - CSS intégré via `tags$head(includeCSS("www/style.css"))`  
 
 ## 3.2 Serveur (`server.R`)
@@ -68,8 +68,7 @@ Ce fichier constitue le back de l'application, il réalise :
 
 # 3.3 Contenu du fichier `global.R`
 
-- Palette de couleurs Okabe–Ito pour visualisations  
-- Import des modules via `source()`  
+- Palette de couleurs Okabe–Ito pour visualisations
 
 
 ---
