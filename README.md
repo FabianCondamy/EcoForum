@@ -61,9 +61,9 @@ Avec les données actuelles, le script met environ 2 heures à s'exécuter. Si d
 
 Pour lancer ce script, ouvrir `interp.R` dans RStudio et exécuter l'intégralité du fichier.
 
-Une autre possibilité pour récupérer les cartes déjà générées est de télécharger le fichier disponible à l'adresse suivante: www.grosfichiers.com/3hCpVE8HEiR
+Une autre possibilité pour récupérer les cartes déjà générées est de télécharger le dossier disponible à l'adresse suivante: www.grosfichiers.com/3hCpVE8HEiR
 
-Veuillez mettre ce fichier dans data/ à la place de images/. 
+Veuillez mettre ce dossier dézippé dans data/ à la place de images/. 
 
 ## Installation et Lancement
 
